@@ -1,0 +1,21 @@
+<view class="page">
+  <view class="card">
+    <text class="title">我的收藏</text>
+    <text class="desc">当前版本：收藏数据保存在本机（手机）</text>
+  </view>
+
+  <view class="list" wx:if="{{items.length > 0}}">
+    <view class="item" wx:for="{{items}}" wx:key="index" data-index="{{index}}" bindtap="onOpen">
+      <view class="row">
+        <text class="name">{{item.artist}}</text>
+        <text class="date">{{item.dateKey}}</text>
+      </view>
+      <text class="sub">{{item.type}} · {{item.detail}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text>暂无收藏</text>
+  </view>
+</view>
+

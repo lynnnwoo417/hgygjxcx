@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="card">
+    <text class="title">回归预告机</text>
+    <text class="desc">本应用不依赖服务器：数据默认保存在你的手机里。</text>
+  </view>
+
+  <view class="list-card">
+    <view class="cell">
+      <text class="cell-title">版本</text>
+      <text class="cell-sub">v0.1</text>
+    </view>
+    <view class="cell" bindtap="onCopy">
+      <text class="cell-title">反馈/联系</text>
+      <text class="cell-sub">复制联系信息</text>
+      <text class="cell-arrow">›</text>
+    </view>
+    <view class="cell" bindtap="onPolicy">
+      <text class="cell-title">隐私说明</text>
+      <text class="cell-sub">仅本地存储</text>
+      <text class="cell-arrow">›</text>
+    </view>
+  </view>
+</view>
+

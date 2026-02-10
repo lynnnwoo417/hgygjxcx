@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="card">
+    <text class="title">我的提醒</text>
+    <text class="desc">提醒列表保存在本机。系统级推送需要后续接入订阅消息/后端，这里先做数据管理。</text>
+  </view>
+
+  <view class="notice" wx:if="{{notice}}">
+    <text>{{notice}}</text>
+  </view>
+
+  <view class="list" wx:if="{{items.length > 0}}">
+    <view class="item" wx:for="{{items}}" wx:key="index">
+      <view class="row">
+        <text class="name">{{item.artist}}</text>
+        <text class="date">{{item.dateKey}}</text>
+      </view>
+      <text class="sub">{{item.type}} · 提前 {{item.advance || 0}} 分钟</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text>暂无提醒</text>
+  </view>
+</view>
+

@@ -1,0 +1,80 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff5f7 0%, #f8f4ff 50%, #f0f8ff 100%);
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.card,
+.form-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(139, 122, 168, 0.12);
+  margin-bottom: 20rpx;
+}
+
+.title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #2d1b4e;
+}
+
+.desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #8b7aa8;
+  line-height: 1.6;
+}
+
+.email-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.email-label {
+  font-size: 24rpx;
+  color: #8b7aa8;
+}
+
+.email-value {
+  font-size: 26rpx;
+  color: #2d1b4e;
+  font-weight: 600;
+}
+
+.btn {
+  background: linear-gradient(135deg, #e8d5f0 0%, #d4c4f0 100%);
+  color: #2d1b4e;
+  border-radius: 16rpx;
+  font-weight: 600;
+  padding: 0 28rpx;
+}
+
+.btn-group {
+  display: flex;
+  gap: 12rpx;
+}
+
+.btn-row {
+  margin-top: 18rpx;
+  display: flex;
+  gap: 12rpx;
+}
+
+.btn.ghost {
+  background: rgba(139, 122, 168, 0.12);
+  color: #6b5b95;
+}
+
+.tip {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #8b7aa8;
+}
+

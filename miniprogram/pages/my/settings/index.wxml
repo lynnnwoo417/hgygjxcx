@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="card">
+    <text class="title">设置</text>
+    <text class="desc">当前版本无服务器：所有数据默认存本机（手机）。</text>
+  </view>
+
+  <view class="list-card">
+    <view class="cell">
+      <text class="cell-title">本机数据</text>
+      <text class="cell-sub">{{storageInfo}}</text>
+    </view>
+    <view class="cell" bindtap="onClearCache">
+      <text class="cell-title">清理缓存</text>
+      <text class="cell-sub">清理 storage（不删收藏/提醒/历史）</text>
+      <text class="cell-arrow">›</text>
+    </view>
+  </view>
+</view>
+

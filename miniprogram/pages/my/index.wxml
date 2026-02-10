@@ -1,0 +1,87 @@
+<view class="page">
+  <!-- Header -->
+  <view class="header-card">
+    <view class="header-left">
+      <view class="avatar">
+        <image
+          class="avatar-img"
+          mode="aspectFill"
+          src="{{profile && profile.avatarUrl ? profile.avatarUrl : 'https://mmocgame.qpic.cn/wechatgame/0/0'}}"
+        />
+      </view>
+      <view class="header-text">
+        <text class="nickname">{{profile ? profile.nickname : '未登录'}}</text>
+        <text class="sub">{{profile ? storageInfo : '数据默认保存在你的手机里（不需要服务器）'}}</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <view class="btn" wx:if="{{!profile}}" bindtap="onTapLogin">点击登录</view>
+      <view class="btn ghost" wx:else bindtap="onTapEditProfile">编辑资料</view>
+    </view>
+  </view>
+
+  <!-- Stats -->
+  <view class="stats-card">
+    <view class="stat" data-to="/pages/my/favorites/index" bindtap="onNav">
+      <text class="stat-num">{{stats.favorites}}</text>
+      <text class="stat-label">收藏</text>
+    </view>
+    <view class="stat" data-to="/pages/my/reminders/index" bindtap="onNav">
+      <text class="stat-num">{{stats.reminders}}</text>
+      <text class="stat-label">提醒</text>
+    </view>
+    <view class="stat" data-to="/pages/my/history/index" bindtap="onNav">
+      <text class="stat-num">{{stats.history}}</text>
+      <text class="stat-label">历史</text>
+    </view>
+  </view>
+
+  <!-- Quick actions -->
+  <view class="grid-card">
+    <view class="grid-row">
+      <view class="grid-item" data-to="/pages/my/favorites/index" bindtap="onNav">
+        <text class="grid-title">我的收藏</text>
+        <text class="grid-desc">回归/演唱会/签售</text>
+      </view>
+      <view class="grid-item" data-to="/pages/my/reminders/index" bindtap="onNav">
+        <text class="grid-title">我的提醒</text>
+        <text class="grid-desc">提前通知</text>
+      </view>
+    </view>
+    <view class="grid-row">
+      <view class="grid-item grid-center" data-to="/pages/my/about/index" bindtap="onNav">
+        <text class="grid-title">关于</text>
+        <text class="grid-desc">版本/协议</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- List -->
+  <view class="list-card">
+    <view class="cell" data-to="/pages/my/settings/index" bindtap="onNav">
+      <text class="cell-title">偏好设置</text>
+      <text class="cell-arrow">›</text>
+    </view>
+    <view class="cell" bindtap="onExportData">
+      <text class="cell-title">导出本机数据</text>
+      <text class="cell-sub">复制 JSON</text>
+      <text class="cell-arrow">›</text>
+    </view>
+    <view class="cell" bindtap="onImportData">
+      <text class="cell-title">导入本机数据</text>
+      <text class="cell-sub">粘贴 JSON</text>
+      <text class="cell-arrow">›</text>
+    </view>
+    <view class="cell danger" bindtap="onClearLocal">
+      <text class="cell-title">清理本地数据</text>
+      <text class="cell-sub">不可恢复</text>
+      <text class="cell-arrow">›</text>
+    </view>
+    <view class="cell" data-to="/pages/my/feedback/index" bindtap="onNav">
+      <text class="cell-title">产品优化反馈</text>
+      <text class="cell-sub">发给管理者</text>
+      <text class="cell-arrow">›</text>
+    </view>
+  </view>
+</view>
+

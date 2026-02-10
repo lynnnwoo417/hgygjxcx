@@ -1,0 +1,26 @@
+# 微信小程序
+node_modules/
+.DS_Store
+*.log
+
+# 编译输出
+miniprogram/dist/
+miniprogram/.tea/
+
+# 数据文件（可选，如果不想提交数据文件可以取消注释）
+# miniprogram/data/*.js
+# miniprogram/data/*.json
+
+# 配置文件中的敏感信息
+project.private.config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.temp

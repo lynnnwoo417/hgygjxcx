@@ -1,0 +1,176 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff5f7 0%, #f8f4ff 50%, #f0f8ff 100%);
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.header-card,
+.stats-card,
+.grid-card,
+.list-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(139, 122, 168, 0.12);
+  margin-bottom: 20rpx;
+}
+
+.header-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  flex: 1;
+}
+
+.avatar {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 46rpx;
+  overflow: hidden;
+  background: rgba(139, 122, 168, 0.12);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.nickname {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #2d1b4e;
+}
+
+.sub {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #8b7aa8;
+  line-height: 1.5;
+}
+
+.header-right .btn {
+  padding: 14rpx 18rpx;
+  border-radius: 14rpx;
+  background: linear-gradient(135deg, #e8d5f0 0%, #d4c4f0 100%);
+  color: #2d1b4e;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.header-right .btn.ghost {
+  background: rgba(139, 122, 168, 0.12);
+  color: #6b5b95;
+}
+
+.stats-card {
+  display: flex;
+  padding: 18rpx 12rpx;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 12rpx 0;
+}
+
+.stat-num {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #2d1b4e;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #8b7aa8;
+}
+
+.grid-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.grid-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.grid-item {
+  flex: 1;
+  padding: 18rpx 18rpx;
+  border-radius: 18rpx;
+  background: rgba(139, 122, 168, 0.08);
+}
+
+.grid-center {
+  text-align: center;
+}
+
+.grid-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2d1b4e;
+}
+
+.grid-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #8b7aa8;
+}
+
+.list-card {
+  padding: 10rpx 0;
+}
+
+.cell {
+  padding: 22rpx 26rpx;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.cell + .cell {
+  border-top: 1rpx solid rgba(0, 0, 0, 0.06);
+}
+
+.cell-title {
+  font-size: 28rpx;
+  color: #2d1b4e;
+  font-weight: 600;
+  flex: 1;
+}
+
+.cell-sub {
+  font-size: 22rpx;
+  color: #8b7aa8;
+}
+
+.cell-arrow {
+  font-size: 30rpx;
+  color: #c0b6d6;
+}
+
+.cell.danger .cell-title {
+  color: #b42318;
+}
+

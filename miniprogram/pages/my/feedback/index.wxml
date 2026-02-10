@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="card">
+    <text class="title">产品优化反馈</text>
+    <text class="desc">小程序无法直接发邮件，请复制邮箱或邮件模板后自行发送。</text>
+  </view>
+
+  <view class="form-card">
+    <view class="email-row">
+      <text class="email-label">收件邮箱</text>
+      <text class="email-value">{{email}}</text>
+    </view>
+    <view class="btn-row">
+      <button class="btn ghost" bindtap="onCopyEmail">复制邮箱</button>
+      <button class="btn" bindtap="onCopyTemplate">复制邮件模板</button>
+    </view>
+    <text class="tip">复制模板后可在邮箱内补充内容并发送。</text>
+  </view>
+</view>
+

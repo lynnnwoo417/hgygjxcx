@@ -1,0 +1,70 @@
+<view class="page">
+  <view class="card">
+    <view class="title-row">
+      <text class="title">记录</text>
+      <view class="add-btn" bindtap="onOpenCreate">＋ 新增</view>
+    </view>
+    <text class="desc">已记录的卡片会汇总在这里，可写下当时追行程的心情。</text>
+  </view>
+
+  <view class="list" wx:if="{{items.length > 0}}">
+    <view class="item" wx:for="{{items}}" wx:key="index" data-index="{{index}}">
+      <view class="row" bindtap="onOpen">
+        <text class="name">{{item.artist}}</text>
+        <text class="date">{{item.dateKey}}</text>
+      </view>
+      <text class="sub">{{item.type}} · {{item.detail}}</text>
+      <text class="note" wx:if="{{item.note}}">记录：{{item.note}}</text>
+      <view class="actions">
+        <text class="action" data-index="{{index}}" bindtap="onEdit">写记录</text>
+        <text class="action danger" data-index="{{index}}" bindtap="onRemove">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text>暂无记录</text>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showCreate}}" bindtap="onCloseCreate"></view>
+  <view class="modal" wx:if="{{showCreate}}">
+    <view class="modal-card">
+      <view class="modal-title">新增自定义记录</view>
+      <input
+        class="input"
+        placeholder="标题/团体名"
+        value="{{formArtist}}"
+        data-field="formArtist"
+        bindinput="onFormInput"
+      />
+      <input
+        class="input"
+        placeholder="事件描述（可选）"
+        value="{{formDetail}}"
+        data-field="formDetail"
+        bindinput="onFormInput"
+      />
+      <view class="row">
+        <picker mode="selector" range="{{typeOptions}}" value="{{typeIndex}}" bindchange="onTypeChange">
+          <view class="picker">类型：{{typeOptions[typeIndex]}}</view>
+        </picker>
+        <picker mode="date" value="{{formDate}}" bindchange="onDateChange">
+          <view class="picker">{{formDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      <textarea
+        class="textarea"
+        placeholder="记录心情（repo）"
+        value="{{formNote}}"
+        data-field="formNote"
+        bindinput="onFormInput"
+        maxlength="200"
+      />
+      <view class="modal-actions">
+        <button class="btn ghost" bindtap="onCloseCreate">取消</button>
+        <button class="btn" bindtap="onCreateRecord">添加记录</button>
+      </view>
+    </view>
+  </view>
+</view>
+

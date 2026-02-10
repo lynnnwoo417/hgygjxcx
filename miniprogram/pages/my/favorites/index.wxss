@@ -1,0 +1,74 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff5f7 0%, #f8f4ff 50%, #f0f8ff 100%);
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(139, 122, 168, 0.12);
+  margin-bottom: 20rpx;
+}
+
+.title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #2d1b4e;
+}
+
+.desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #8b7aa8;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.item {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2d1b4e;
+  flex: 1;
+}
+
+.date {
+  font-size: 22rpx;
+  color: #8b7aa8;
+}
+
+.sub {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.empty {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+

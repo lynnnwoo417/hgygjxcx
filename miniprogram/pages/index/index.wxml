@@ -1,0 +1,113 @@
+<view class="page">
+  <view class="header">
+    <text class="title">回归预告机</text>
+    <text class="slogan">打歌预录 · 演唱会 · 签售 · 活动</text>
+  </view>
+
+  <view class="search-wrap">
+    <view class="search-bar">
+      <input
+        class="search-input"
+        placeholder="搜索团名/标题"
+        value="{{searchText}}"
+        bindinput="onSearchInput"
+        bindfocus="onSearchFocus"
+        bindblur="onSearchBlur"
+        confirm-type="search"
+      />
+      <view class="search-clear" wx:if="{{searchText}}" bindtap="onSearchClear">×</view>
+    </view>
+
+    <view class="search-panel" wx:if="{{searchOpen}}">
+      <view class="search-empty" wx:if="{{searchText && searchResults.length === 0}}">
+        <text>无匹配结果</text>
+      </view>
+      <scroll-view class="search-results" scroll-y="true" wx:if="{{searchResults.length > 0}}">
+        <view
+          class="search-item"
+          wx:for="{{searchResults}}"
+          wx:key="index"
+          data-index="{{index}}"
+          bindtap="onSearchResultTap"
+        >
+          <view class="search-top">
+            <text class="search-artist">{{item.artist}}</text>
+            <text class="search-date">{{item.dateKey}}</text>
+          </view>
+          <view class="search-bottom">
+            <text class="type-tag {{item.type === '回归' ? 'type-regression' : item.type === '演唱会' ? 'type-concert' : item.type === '签售' ? 'type-fansign' : 'type-activity'}}">{{item.type}}</text>
+            <text class="search-detail">{{item._displayDetail || item.detail}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="filter-tabs">
+    <view
+      class="tab {{filterType === item.key ? 'active' : ''}}"
+      wx:for="{{filterTabs}}"
+      wx:key="key"
+      data-filter="{{item.key}}"
+      bindtap="onFilterTap"
+    >{{item.label}}</view>
+  </view>
+
+  <view class="calendar-wrap">
+    <view class="month-bar">
+      <view class="arrow" bindtap="prevMonth">‹</view>
+      <text class="month-label">{{monthLabel}}</text>
+      <view class="arrow" bindtap="nextMonth">›</view>
+    </view>
+
+    <view class="weekdays">
+      <text class="weekday" wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <view class="days-grid">
+      <view
+        class="day-cell {{item.isCurrentMonth ? '' : 'other-month'}} {{item.dateKey === selectedDateKey ? 'selected' : ''}} {{item.isToday ? 'today' : ''}}"
+        wx:for="{{calendarDays}}"
+        wx:key="dateKey"
+        data-date-key="{{item.dateKey}}"
+        bindtap="onDayTap"
+      >
+        <text class="day-num">{{item.day}}</text>
+        <view class="dot" wx:if="{{item.hasEvent}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="detail-section">
+    <text class="detail-title">当日日程 · {{selectedDateKey}}</text>
+    <view class="schedule-list" wx:if="{{selectedDaySchedules.length > 0}}">
+      <view class="schedule-item clickable" wx:for="{{selectedDaySchedules}}" wx:key="id" data-index="{{index}}" bindtap="onScheduleItemTap">
+        <view class="item-top">
+          <text class="artist">{{item.artist}}</text>
+        </view>
+        <view class="type-row">
+          <text class="type-tag {{item.type === '回归' ? 'type-regression' : item.type === '演唱会' ? 'type-concert' : item.type === '签售' ? 'type-fansign' : 'type-activity'}}">{{item.type}}</text>
+          <view class="item-actions">
+            <text class="record-btn {{item._isRecorded ? 'active' : ''}}" data-index="{{index}}" catchtap="onRecordTap">记录</text>
+            <text class="fav-star {{item._isFavorite ? 'active' : ''}}" data-index="{{index}}" catchtap="onToggleFavorite">★</text>
+          </view>
+        </view>
+        <text class="detail">{{item.detail}}</text>
+        <view class="extra-row" wx:if="{{(item.type === '演唱会' || item.type === '签售') && (item.ticketPlatform || item.ticketTime)}}">
+          <text wx:if="{{item.ticketPlatform}}" class="extra">购票 {{item.ticketPlatform}}</text>
+          <text wx:if="{{item.ticketTime}}" class="extra">场馆 {{item.ticketTime}}</text>
+        </view>
+        <view class="extra-row" wx:if="{{item.type === '活动' && item.locationText}}">
+          <text class="extra">地点 {{item.locationText}}</text>
+        </view>
+        <view class="extra-row" wx:if="{{item.type === '回归' && item.showTime}}">
+          <text class="extra">发布时间 {{item.showTime}}</text>
+        </view>
+        <view class="detail-link">点击查看详情</view>
+      </view>
+    </view>
+    <view class="empty-tip" wx:else>
+      <text>该日暂无{{filterType === '全部' ? '' : filterType}}日程</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="card">
+    <text class="title">浏览历史</text>
+    <text class="desc">打开任意详情页会自动记录（仅保存在本机）</text>
+  </view>
+
+  <view class="list" wx:if="{{items.length > 0}}">
+    <view class="item" wx:for="{{items}}" wx:key="index" data-index="{{index}}" bindtap="onOpen">
+      <view class="row">
+        <text class="name">{{item.artist}}</text>
+        <text class="date">{{item.dateKey}}</text>
+      </view>
+      <text class="sub">{{item.type}} · {{item.detail}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <text>暂无历史记录</text>
+  </view>
+
+  <view class="footer" wx:if="{{items.length > 0}}">
+    <button class="btn ghost" bindtap="onClear">清空历史</button>
+  </view>
+</view>
+

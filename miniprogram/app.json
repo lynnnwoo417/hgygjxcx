@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/record/index",
+    "pages/product-opt/index",
+    "pages/my/index",
+    "pages/my/favorites/index",
+    "pages/my/reminders/index",
+    "pages/my/history/index",
+    "pages/my/settings/index",
+    "pages/my/about/index",
+    "pages/my/feedback/index",
+    "pages/event-detail/index",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "回归预告机",
+    "navigationBarBackgroundColor": "#F0F8FF"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "tabBar": {
+    "color": "#8b7aa8",
+    "selectedColor": "#2d1b4e",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/record/index",
+        "text": "记录",
+        "iconPath": "assets/tabbar/record.png",
+        "selectedIconPath": "assets/tabbar/record-active.png"
+      },
+      {
+        "pagePath": "pages/product-opt/index",
+        "text": "订阅",
+        "iconPath": "assets/tabbar/bell.png",
+        "selectedIconPath": "assets/tabbar/bell-active.png"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的",
+        "iconPath": "assets/tabbar/my.png",
+        "selectedIconPath": "assets/tabbar/my-active.png"
+      }
+    ]
+  }
+}

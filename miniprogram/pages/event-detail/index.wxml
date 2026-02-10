@@ -1,0 +1,57 @@
+<view class="page">
+  <view class="poster-wrap" wx:if="{{coverImage}}" bindtap="onExpandPoster">
+    <image class="poster-img" src="{{coverImage}}" mode="aspectFill" show-menu-by-longpress />
+    <view class="poster-zoom-btn">放大</view>
+  </view>
+  <view class="poster-fullscreen" wx:if="{{posterExpand && coverImage}}" bindtap="onClosePosterExpand">
+    <image class="poster-full-img" src="{{coverImage}}" mode="widthFix" catchtap="" />
+    <view class="poster-full-actions" catchtap="">
+      <button class="poster-save-btn" bindtap="onSavePoster">保存到相册</button>
+      <view class="poster-close-hint">点击空白处关闭</view>
+    </view>
+  </view>
+  <view class="card">
+    <view class="row">
+      <text class="label">{{type === '活动' ? '标题' : '艺人'}}</text>
+      <text class="value">{{artist}}</text>
+    </view>
+    <view class="row">
+      <text class="label">类型</text>
+      <text class="value type-tag {{type === '回归' ? 'type-regression' : type === '演唱会' ? 'type-concert' : type === '签售' ? 'type-fansign' : 'type-activity'}}">{{type}}</text>
+    </view>
+    <view class="row">
+      <text class="label">日期</text>
+      <text class="value">{{dateKey || date}}</text>
+    </view>
+    <view class="row">
+      <text class="label">详情</text>
+      <text class="value detail-text">{{detail}}</text>
+    </view>
+    <block wx:if="{{type === '演唱会' || type === '签售'}}">
+      <view class="row">
+        <text class="label">购票平台</text>
+        <text class="value">{{ticketPlatform || '暂无'}}</text>
+      </view>
+      <view class="row">
+        <text class="label">场馆</text>
+        <text class="value">{{ticketTime || '暂无'}}</text>
+      </view>
+    </block>
+    <block wx:if="{{type === '活动'}}">
+      <view class="row">
+        <text class="label">地点</text>
+        <text class="value">{{locationText || '暂无'}}</text>
+      </view>
+    </block>
+    <block wx:if="{{type === '回归' && showTime}}">
+      <view class="row">
+        <text class="label">发布时间</text>
+        <text class="value">{{showTime}}</text>
+      </view>
+    </block>
+  </view>
+  <button class="btn" wx:if="{{detailUrl}}" bindtap="onOpenLink">
+    {{type === '签售' ? '复制购买链接' : (type === '演唱会' || type === '活动' ? '复制购票链接' : '复制详情链接')}}
+  </button>
+  <button class="btn ghost" bindtap="onToggleFavorite">{{isFavorite ? '取消收藏' : '加入收藏'}}</button>
+</view>
