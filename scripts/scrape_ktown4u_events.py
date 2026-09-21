@@ -223,6 +223,10 @@ def main() -> None:
     for i, s in enumerate(schedules):
         s["id"] = i + 1
 
+    # 上游接口改版、限流或返回空页时，不允许用空数组覆盖现有签售库。
+    if not schedules:
+        raise RuntimeError("Ktown4u 本次未返回有效签售记录，已停止写入并保留旧数据")
+
     os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(schedules, f, ensure_ascii=False, indent=2)
@@ -238,4 +242,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

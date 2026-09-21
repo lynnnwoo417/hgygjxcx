@@ -1,14 +1,41 @@
 <view class="page">
   <view class="header">
     <text class="title">回归预告机</text>
-    <text class="slogan">打歌预录 · 演唱会 · 签售 · 活动</text>
+    <text class="slogan">回归 · 演唱会 · 签售，一站看清</text>
+  </view>
+
+  <view class="overview-card">
+    <view class="overview-top">
+      <view class="overview-copy">
+        <text class="overview-kicker">COMING SOON</text>
+        <text class="overview-title">{{upcomingCountText}}</text>
+        <text class="overview-meta">数据更新于 {{dataUpdatedAt}} · 韩国时间 KST</text>
+      </view>
+      <view class="flag-trigger {{regionOpen ? 'open' : ''}}" bindtap="onFlagPanelToggle">
+        <text class="flag-emoji">{{regionFlag}}</text>
+        <text class="flag-caret">⌄</text>
+      </view>
+    </view>
+    <view class="flag-panel {{regionOpen ? 'open' : ''}}">
+      <view class="flag-list">
+        <view
+          class="flag-btn {{regionKey === item.key ? 'active' : ''}}"
+          wx:for="{{regionTabs}}"
+          wx:key="key"
+          data-region="{{item.key}}"
+          bindtap="onRegionTap"
+        >
+          <text class="flag-emoji">{{item.flag}}</text>
+        </view>
+      </view>
+    </view>
   </view>
 
   <view class="search-wrap">
     <view class="search-bar">
       <input
         class="search-input"
-        placeholder="搜索团名/标题"
+        placeholder="搜索艺人 / 活动 / 场馆"
         value="{{searchText}}"
         bindinput="onSearchInput"
         bindfocus="onSearchFocus"
@@ -59,6 +86,7 @@
       <text class="month-label">{{monthLabel}}</text>
       <view class="arrow" bindtap="nextMonth">›</view>
     </view>
+    <text class="calendar-hint">{{calendarHint}}</text>
 
     <view class="weekdays">
       <text class="weekday" wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
@@ -79,7 +107,15 @@
   </view>
 
   <view class="detail-section">
-    <text class="detail-title">当日日程 · {{selectedDateKey}}</text>
+    <view class="detail-head" bindtap="onDayPanelToggle">
+      <view class="detail-head-left">
+        <text class="detail-title">当日日程 · {{selectedDateKey}}</text>
+        <text class="detail-count">{{selectedDaySchedules.length}} 场 · {{dayPanelOpen ? '点击收起' : '点击展开'}}</text>
+      </view>
+      <text class="upcoming-chevron {{dayPanelOpen ? 'open' : ''}}">›</text>
+    </view>
+
+    <view class="detail-body" wx:if="{{dayPanelOpen}}">
     <view class="schedule-list" wx:if="{{selectedDaySchedules.length > 0}}">
       <view class="schedule-item clickable" wx:for="{{selectedDaySchedules}}" wx:key="id" data-index="{{index}}" bindtap="onScheduleItemTap">
         <view class="item-top">
@@ -88,26 +124,28 @@
         <view class="type-row">
           <text class="type-tag {{item.type === '回归' ? 'type-regression' : item.type === '演唱会' ? 'type-concert' : item.type === '签售' ? 'type-fansign' : 'type-activity'}}">{{item.type}}</text>
           <view class="item-actions">
-            <text class="record-btn {{item._isRecorded ? 'active' : ''}}" data-index="{{index}}" catchtap="onRecordTap">记录</text>
+            <text class="record-btn {{item._isRecorded ? 'active' : ''}}" data-index="{{index}}" catchtap="onRecordTap">{{item._isRecorded ? '✓ 已加入' : '＋ 加入行程'}}</text>
             <text class="fav-star {{item._isFavorite ? 'active' : ''}}" data-index="{{index}}" catchtap="onToggleFavorite">★</text>
           </view>
         </view>
         <text class="detail">{{item.detail}}</text>
-        <view class="extra-row" wx:if="{{(item.type === '演唱会' || item.type === '签售') && (item.ticketPlatform || item.ticketTime)}}">
-          <text wx:if="{{item.ticketPlatform}}" class="extra">购票 {{item.ticketPlatform}}</text>
-          <text wx:if="{{item.ticketTime}}" class="extra">场馆 {{item.ticketTime}}</text>
+        <view class="extra-row" wx:if="{{item.showTime}}">
+          <text class="extra">{{item.type === '回归' ? '发布时间' : '活动时间'}} {{item.showTime}}</text>
         </view>
-        <view class="extra-row" wx:if="{{item.type === '活动' && item.locationText}}">
-          <text class="extra">地点 {{item.locationText}}</text>
+        <view class="extra-row" wx:if="{{item.venue || item.displayLocation || item.locationText}}">
+          <text wx:if="{{item.venue}}" class="extra">场馆 {{item.venue}}</text>
+          <text wx:if="{{item.displayLocation || (item.locationText && item.locationText !== item.venue)}}" class="extra">地点 {{item.displayLocation || item.locationText}}</text>
         </view>
-        <view class="extra-row" wx:if="{{item.type === '回归' && item.showTime}}">
-          <text class="extra">发布时间 {{item.showTime}}</text>
+        <view class="extra-row" wx:if="{{item.ticketPlatform || item.ticketTime}}">
+          <text wx:if="{{item.ticketPlatform}}" class="extra">{{item.type === '签售' ? '报名' : '购票'}} {{item.ticketPlatform}}</text>
+          <text wx:if="{{item.ticketTime}}" class="extra">开票 {{item.ticketTime}}</text>
         </view>
         <view class="detail-link">点击查看详情</view>
       </view>
     </view>
     <view class="empty-tip" wx:else>
       <text>该日暂无{{filterType === '全部' ? '' : filterType}}日程</text>
+    </view>
     </view>
   </view>
 </view>

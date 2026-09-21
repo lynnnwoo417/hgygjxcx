@@ -53,7 +53,7 @@ Page({
       wx.showToast({ title: '请填写标题', icon: 'none' });
       return;
     }
-    const detail = (this.data.formDetail || '').trim() || '自定义记录';
+    const detail = (this.data.formDetail || '').trim() || '自定义行程';
     const note = (this.data.formNote || '').trim();
     const dateKey = (this.data.formDate || '').trim();
     const type = (this.data.typeOptions || [])[this.data.typeIndex] || '回归';
@@ -92,7 +92,7 @@ Page({
       formDate: '',
       showCreate: false
     });
-    wx.showToast({ title: '已添加记录', icon: 'none' });
+    wx.showToast({ title: '已加入行程', icon: 'none' });
     this.refresh();
   },
 
@@ -119,9 +119,9 @@ Page({
     if (!item) return;
     const current = item.note || '';
     wx.showModal({
-      title: '编辑记录',
+      title: '行程备注',
       editable: true,
-      placeholderText: '写下追回归的repo…',
+      placeholderText: '写下行程备注…',
       content: current,
       success: (res) => {
         if (!res.confirm) return;

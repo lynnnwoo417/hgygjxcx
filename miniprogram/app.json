@@ -35,7 +35,7 @@
       },
       {
         "pagePath": "pages/record/index",
-        "text": "记录",
+        "text": "行程",
         "iconPath": "assets/tabbar/record.png",
         "selectedIconPath": "assets/tabbar/record-active.png"
       },

@@ -12,8 +12,10 @@ interface IAppOption {
       detail: string;
       ticketPlatform?: string;
       ticketTime?: string;
+      venue?: string;
       showTime?: string;
       detailUrl?: string;
+      officialUrl?: string;
       locationText?: string;
       coverImage?: string;
     },

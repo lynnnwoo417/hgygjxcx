@@ -182,19 +182,6 @@
     "id": 14
   },
   {
-    "artist": "BURIED ALIVE",
-    "type": "签售",
-    "date": "01-28",
-    "dateKey": "2021-01-28",
-    "detail": "★Event!★ BA X Union Grid Backpack [Black]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=51670",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000052/GD00051670.default.2.png",
-    "id": 15
-  },
-  {
     "artist": "Kim Woo Seok",
     "type": "签售",
     "date": "02-09",
@@ -205,7 +192,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000051/GD00050930.default.1.jpg",
-    "id": 16
+    "id": 15
   },
   {
     "artist": "Kim Woo Seok",
@@ -218,7 +205,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000051/GD00050937.default.1.jpg",
-    "id": 17
+    "id": 16
   },
   {
     "artist": "Kim Woo Seok",
@@ -231,7 +218,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000051/GD00050947.default.2.jpg",
-    "id": 18
+    "id": 17
   },
   {
     "artist": "Lee Seung Hyub (J.DON)",
@@ -244,7 +231,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000053/GD00052344.default.1.jpg",
-    "id": 19
+    "id": 18
   },
   {
     "artist": "Lee Seung Hyub (J.DON)",
@@ -257,7 +244,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000053/GD00052344.default.1.jpg",
-    "id": 20
+    "id": 19
   },
   {
     "artist": "WONHO",
@@ -270,7 +257,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000052/GD00051941.default.1.jpg",
-    "id": 21
+    "id": 20
   },
   {
     "artist": "WONHO",
@@ -283,7 +270,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000052/GD00051941.default.1.jpg",
-    "id": 22
+    "id": 21
   },
   {
     "artist": "WONHO",
@@ -296,7 +283,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000052/GD00051941.default.1.jpg",
-    "id": 23
+    "id": 22
   },
   {
     "artist": "WOODZ",
@@ -309,7 +296,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000053/GD00052973.default.2.jpg",
-    "id": 24
+    "id": 23
   },
   {
     "artist": "KANG SEUNG YOON",
@@ -322,7 +309,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000054/GD00053547.default.1.jpg",
-    "id": 25
+    "id": 24
   },
   {
     "artist": "KANG SEUNG YOON",
@@ -335,7 +322,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000054/GD00053549.default.1.jpg",
-    "id": 26
+    "id": 25
   },
   {
     "artist": "KANG SEUNG YOON",
@@ -348,7 +335,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000054/GD00053554.default.1.jpg",
-    "id": 27
+    "id": 26
   },
   {
     "artist": "ONEUS",
@@ -361,7 +348,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000056/GD00055505.default.1.jpg",
-    "id": 28
+    "id": 27
   },
   {
     "artist": "CELUI HURU",
@@ -374,7 +361,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000056/GD00055368.default.1.png",
-    "id": 29
+    "id": 28
   },
   {
     "artist": "N.Flying",
@@ -387,7 +374,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000058/GD00057082.default.1.jpg",
-    "id": 30
+    "id": 29
   },
   {
     "artist": "LIGHTSUM",
@@ -400,7 +387,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000058/GD00057502.default.2.jpg",
-    "id": 31
+    "id": 30
   },
   {
     "artist": "SF9",
@@ -413,7 +400,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000060/GD00059573.default.1.jpg",
-    "id": 32
+    "id": 31
   },
   {
     "artist": "instanttatto",
@@ -426,7 +413,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000063/GD00062275.default.1.jpg",
-    "id": 33
+    "id": 32
   },
   {
     "artist": "instanttatto",
@@ -439,7 +426,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000063/GD00062280.default.1.jpg",
-    "id": 34
+    "id": 33
   },
   {
     "artist": "instanttatto",
@@ -452,7 +439,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000063/GD00062287.default.1.jpg",
-    "id": 35
+    "id": 34
   },
   {
     "artist": "FTISLAND",
@@ -465,7 +452,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000071/GD00070324.default.2.png",
-    "id": 36
+    "id": 35
   },
   {
     "artist": "MINO",
@@ -478,7 +465,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000071/GD00070116.default.1.png",
-    "id": 37
+    "id": 36
   },
   {
     "artist": "MINO",
@@ -491,7 +478,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000071/GD00070117.default.1.png",
-    "id": 38
+    "id": 37
   },
   {
     "artist": "MINO",
@@ -504,7 +491,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000071/GD00070119.default.1.png",
-    "id": 39
+    "id": 38
   },
   {
     "artist": "MINO",
@@ -517,7 +504,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000071/GD00070121.default.1.png",
-    "id": 40
+    "id": 39
   },
   {
     "artist": "TREASURE",
@@ -530,7 +517,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000084/GD00083511.default.1.png",
-    "id": 41
+    "id": 40
   },
   {
     "artist": "TREASURE",
@@ -543,7 +530,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000084/GD00083513.default.1.png",
-    "id": 42
+    "id": 41
   },
   {
     "artist": "TREASURE",
@@ -556,7 +543,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000084/GD00083511.default.1.png",
-    "id": 43
+    "id": 42
   },
   {
     "artist": "TREASURE",
@@ -569,7 +556,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000084/GD00083513.default.1.png",
-    "id": 44
+    "id": 43
   },
   {
     "artist": "TREASURE",
@@ -582,7 +569,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092521.default.1.png",
-    "id": 45
+    "id": 44
   },
   {
     "artist": "TREASURE",
@@ -595,7 +582,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092521.default.1.png",
-    "id": 46
+    "id": 45
   },
   {
     "artist": "TREASURE",
@@ -608,7 +595,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000094/GD00093134.default.1.png",
-    "id": 47
+    "id": 46
   },
   {
     "artist": "TREASURE",
@@ -621,7 +608,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000094/GD00093134.default.1.png",
-    "id": 48
+    "id": 47
   },
   {
     "artist": "CRAVITY",
@@ -634,7 +621,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000092/GD00091113.default.1.jpg",
-    "id": 49
+    "id": 48
   },
   {
     "artist": "Kim Woo Seok",
@@ -647,7 +634,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 50
+    "id": 49
   },
   {
     "artist": "Kim Woo Seok",
@@ -660,7 +647,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 51
+    "id": 50
   },
   {
     "artist": "Kim Woo Seok",
@@ -673,7 +660,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 52
+    "id": 51
   },
   {
     "artist": "Kim Woo Seok",
@@ -686,7 +673,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 53
+    "id": 52
   },
   {
     "artist": "Kim Woo Seok",
@@ -699,7 +686,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 54
+    "id": 53
   },
   {
     "artist": "Kim Woo Seok",
@@ -712,7 +699,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000093/GD00092522.default.1.jpg",
-    "id": 55
+    "id": 54
   },
   {
     "artist": "AB6IX",
@@ -725,20 +712,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095671.default.1.png",
-    "id": 56
-  },
-  {
-    "artist": "P1Harmony",
-    "type": "签售",
-    "date": "06-08",
-    "dateKey": "2023-06-08",
-    "detail": "[Overseas Fan Signing Event in BANGKOK] P1Harmony - 6th Mini Album [HARMONY : ALL IN] (Random Ver.)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=100312",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 57
+    "id": 55
   },
   {
     "artist": "P1Harmony",
@@ -751,7 +725,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 58
+    "id": 56
   },
   {
     "artist": "P1Harmony",
@@ -764,7 +738,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 59
+    "id": 57
   },
   {
     "artist": "P1Harmony",
@@ -777,7 +751,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 60
+    "id": 58
   },
   {
     "artist": "P1Harmony",
@@ -790,7 +764,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 61
+    "id": 59
   },
   {
     "artist": "P1Harmony",
@@ -803,7 +777,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 62
+    "id": 60
   },
   {
     "artist": "P1Harmony",
@@ -816,7 +790,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 63
+    "id": 61
   },
   {
     "artist": "P1Harmony",
@@ -829,20 +803,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 64
-  },
-  {
-    "artist": "P1Harmony",
-    "type": "签售",
-    "date": "06-08",
-    "dateKey": "2023-06-08",
-    "detail": "[Overseas Fan Signing Event in TAIPEI] P1Harmony - 6th Mini Album [HARMONY : ALL IN] (Random Ver.)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=99794",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000096/GD00095161.default.1.jpg",
-    "id": 65
+    "id": 62
   },
   {
     "artist": "TREASURE",
@@ -855,72 +816,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "/goods_files/SH0164/goods_images/000097/GD00096849.default.1.jpg",
-    "id": 66
-  },
-  {
-    "artist": "NATURE REPUBLIC",
-    "type": "签售",
-    "date": "08-01",
-    "dateKey": "2023-08-01",
-    "detail": "[EVENT][NATURE REPUBLIC] MASK SHEET 13EA SET",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=56366",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2024/03/11/Vmj3GE.jpg",
-    "id": 67
-  },
-  {
-    "artist": "NATURE REPUBLIC",
-    "type": "签售",
-    "date": "08-01",
-    "dateKey": "2023-08-01",
-    "detail": "[EVENT]BULGARIANH ROSE MOISTURE LINE SET",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=59016",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2024/03/11/Mvih89.jpg",
-    "id": 68
-  },
-  {
-    "artist": "NATURE REPUBLIC",
-    "type": "签售",
-    "date": "08-01",
-    "dateKey": "2023-08-01",
-    "detail": "[NATURE REPUBLIC] Soothing & Moisture Aloe Vera 92% Soothing Gel (Tube) 250ml 3ea",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=72516",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000073/GD00072516.default.1.jpg",
-    "id": 69
-  },
-  {
-    "artist": "THEFACESHOP",
-    "type": "签售",
-    "date": "08-01",
-    "dateKey": "2023-08-01",
-    "detail": "[Event] Real Nature Mask Pack 15+3 Gift!",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=72451",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000073/GD00072451.default.1.png",
-    "id": 70
-  },
-  {
-    "artist": "instanttatto",
-    "type": "签售",
-    "date": "08-01",
-    "dateKey": "2023-08-01",
-    "detail": "★Event!★ Matte Fixer",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=62271",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "/goods_files/SH0164/goods_images/000063/GD00062271.default.1.jpg",
-    "id": 71
+    "id": 63
   },
   {
     "artist": "CRAVITY",
@@ -933,7 +829,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2023/09/11/lkTiFS.jpg",
-    "id": 72
+    "id": 64
   },
   {
     "artist": "CRAVITY",
@@ -946,7 +842,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2023/09/11/lkTiFS.jpg",
-    "id": 73
+    "id": 65
   },
   {
     "artist": "Jung Yong Hwa",
@@ -959,7 +855,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2023/09/04/riwI7L.jpg",
-    "id": 74
+    "id": 66
   },
   {
     "artist": "Jung Yong Hwa",
@@ -972,7 +868,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2023/09/04/riwI7L.jpg",
-    "id": 75
+    "id": 67
   },
   {
     "artist": "Ktown4u",
@@ -985,7 +881,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2024/01/09/UJDaix.png",
-    "id": 76
+    "id": 68
   },
   {
     "artist": "EVNNE",
@@ -998,7 +894,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2024/01/12/b2m2IB.png",
-    "id": 77
+    "id": 69
   },
   {
     "artist": "EVNNE",
@@ -1011,7 +907,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2024/01/12/b2m2IB.png",
-    "id": 78
+    "id": 70
   },
   {
     "artist": "ohora",
@@ -1024,7 +920,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/E09eN3.png",
-    "id": 79
+    "id": 71
   },
   {
     "artist": "ohora",
@@ -1037,7 +933,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/MzV6DY.png",
-    "id": 80
+    "id": 72
   },
   {
     "artist": "ohora",
@@ -1050,7 +946,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/NuPLJe.png",
-    "id": 81
+    "id": 73
   },
   {
     "artist": "ohora",
@@ -1063,7 +959,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/OQns5W.png",
-    "id": 82
+    "id": 74
   },
   {
     "artist": "ohora",
@@ -1076,7 +972,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/8AEgYG.png",
-    "id": 83
+    "id": 75
   },
   {
     "artist": "ohora",
@@ -1089,7 +985,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/oLIbME.png",
-    "id": 84
+    "id": 76
   },
   {
     "artist": "ohora",
@@ -1102,7 +998,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/6Pe93g.png",
-    "id": 85
+    "id": 77
   },
   {
     "artist": "ohora",
@@ -1115,7 +1011,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/CX5k0I.png",
-    "id": 86
+    "id": 78
   },
   {
     "artist": "ohora",
@@ -1128,7 +1024,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/VuJTKe.png",
-    "id": 87
+    "id": 79
   },
   {
     "artist": "ohora",
@@ -1141,7 +1037,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/2eSiON.png",
-    "id": 88
+    "id": 80
   },
   {
     "artist": "ohora",
@@ -1154,7 +1050,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/DxPg8U.png",
-    "id": 89
+    "id": 81
   },
   {
     "artist": "ohora",
@@ -1167,7 +1063,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/00GbNb.png",
-    "id": 90
+    "id": 82
   },
   {
     "artist": "ohora",
@@ -1180,7 +1076,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/HeLDeT.png",
-    "id": 91
+    "id": 83
   },
   {
     "artist": "ohora",
@@ -1193,7 +1089,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/01/9QCiPM.png",
-    "id": 92
+    "id": 84
   },
   {
     "artist": "BOYNEXTDOOR",
@@ -1206,7 +1102,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/04/30/gcvChA.png",
-    "id": 93
+    "id": 85
   },
   {
     "artist": "BOYNEXTDOOR",
@@ -1219,7 +1115,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/05/12/qQ9WmI.png",
-    "id": 94
+    "id": 86
   },
   {
     "artist": "ENHYPEN",
@@ -1232,7 +1128,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/05/23/6OeKN8.jpg",
-    "id": 95
+    "id": 87
   },
   {
     "artist": "ENHYPEN",
@@ -1245,7 +1141,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/06/05/MJ5mAI.jpg",
-    "id": 96
+    "id": 88
   },
   {
     "artist": "ENHYPEN",
@@ -1258,7 +1154,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/05/23/doRmKA.jpg",
-    "id": 97
+    "id": 89
   },
   {
     "artist": "ENHYPEN",
@@ -1271,7 +1167,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/06/05/FOIzZS.jpg",
-    "id": 98
+    "id": 90
   },
   {
     "artist": "SON TAE JIN",
@@ -1284,7 +1180,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/06/23/pb7wOQ.png",
-    "id": 99
+    "id": 91
   },
   {
     "artist": "FIFTY FIFTY",
@@ -1297,7 +1193,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/07/22/aIoymG.png",
-    "id": 100
+    "id": 92
   },
   {
     "artist": "TWS",
@@ -1310,7 +1206,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/09/22/HrdxvO.jpg",
-    "id": 101
+    "id": 93
   },
   {
     "artist": "TWS",
@@ -1323,7 +1219,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/10/13/kxKfQq.jpg",
-    "id": 102
+    "id": 94
   },
   {
     "artist": "TWS",
@@ -1336,7 +1232,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/09/22/QlmUdm.jpg",
-    "id": 103
+    "id": 95
   },
   {
     "artist": "TWS",
@@ -1349,7 +1245,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/10/13/DEkR34.jpg",
-    "id": 104
+    "id": 96
   },
   {
     "artist": "NEXZ",
@@ -1362,7 +1258,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/10/13/NXSMQd.jpg",
-    "id": 105
+    "id": 97
   },
   {
     "artist": "NEXZ",
@@ -1375,7 +1271,7 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/10/13/BezJIT.jpg",
-    "id": 106
+    "id": 98
   },
   {
     "artist": "Stray Kids",
@@ -1388,175 +1284,45 @@
     "ticketTime": "",
     "showTime": "",
     "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2025/11/17/w5lMUv.jpg",
-    "id": 107
+    "id": 99
   },
   {
-    "artist": "DAILY:DIRECTION",
+    "artist": "Hearts2Hearts",
     "type": "签售",
-    "date": "02-23",
-    "dateKey": "2026-02-23",
-    "detail": "[Showcase Event] DAILY:DIRECTION - ‘First:Delivery’ (Random Ver.)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156949",
+    "date": "06-22",
+    "dateKey": "2026-06-22",
+    "detail": "[3rd] [Online Lucky Draw Event] Hearts2Hearts - 2nd Mini Album [Lemon Tang] (Photobook Ver.) (Random Ver.) **NON-REFUNDA",
+    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=169001",
     "ticketPlatform": "Ktown4u",
     "ticketTime": "",
     "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/09/F77H2W.png",
-    "id": 108
+    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/06/15/uQPly4.jpg",
+    "id": 100
   },
   {
-    "artist": "DAILY:DIRECTION",
+    "artist": "TUIDE",
     "type": "签售",
-    "date": "02-23",
-    "dateKey": "2026-02-23",
-    "detail": "[Showcase Event] [2CD SET] DAILY:DIRECTION - ‘First:Delivery’",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156952",
+    "date": "08-24",
+    "dateKey": "2026-08-24",
+    "detail": "[Online Lucky Draw Event] TUIDE - The 1st EP [TUNE & PLAY] (Random Ver.) **NON-REFUNDABLE**",
+    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=168337",
     "ticketPlatform": "Ktown4u",
     "ticketTime": "",
     "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/09/TLa8Qi.png",
-    "id": 109
+    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/08/03/AU94He.jpg",
+    "id": 101
   },
   {
-    "artist": "IVE",
+    "artist": "TUIDE",
     "type": "签售",
-    "date": "02-23",
-    "dateKey": "2026-02-23",
-    "detail": "[Showcase Event] IVE - 2nd Album [REVIVE+] (SPOILERS Ver.)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156899",
+    "date": "08-24",
+    "dateKey": "2026-08-24",
+    "detail": "[Online Lucky Draw Event] [2CD SET] TUIDE - The 1st EP [TUNE & PLAY] **NON-REFUNDABLE**",
+    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=168340",
     "ticketPlatform": "Ktown4u",
     "ticketTime": "",
     "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/09/fvmoT9.jpg",
-    "id": 110
-  },
-  {
-    "artist": "IVE",
-    "type": "签售",
-    "date": "02-23",
-    "dateKey": "2026-02-23",
-    "detail": "[Showcase Event] IVE - 2nd Album [REVIVE+] (Random Ver.)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156901",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/09/u6u5ug.jpg",
-    "id": 111
-  },
-  {
-    "artist": "QQQ",
-    "type": "签售",
-    "date": "02-26",
-    "dateKey": "2026-02-26",
-    "detail": "[Cafe Event] QQQ - 1st Mini Album [QtoresQ]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156852",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/04/oOzYd3.jpg",
-    "id": 112
-  },
-  {
-    "artist": "QQQ",
-    "type": "签售",
-    "date": "02-26",
-    "dateKey": "2026-02-26",
-    "detail": "[Polaroaid Photo Event] (KB) QQQ - 1st Mini Album [QtoresQ]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156853",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/04/oOzYd3.jpg",
-    "id": 113
-  },
-  {
-    "artist": "QQQ",
-    "type": "签售",
-    "date": "02-26",
-    "dateKey": "2026-02-26",
-    "detail": "[Polaroaid Photo Event] (JISUNG) QQQ - 1st Mini Album [QtoresQ]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156854",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/04/oOzYd3.jpg",
-    "id": 114
-  },
-  {
-    "artist": "QQQ",
-    "type": "签售",
-    "date": "02-26",
-    "dateKey": "2026-02-26",
-    "detail": "[Polaroaid Photo Event] (NINE) QQQ - 1st Mini Album [QtoresQ]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156855",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/04/oOzYd3.jpg",
-    "id": 115
-  },
-  {
-    "artist": "QQQ",
-    "type": "签售",
-    "date": "02-26",
-    "dateKey": "2026-02-26",
-    "detail": "[Video Call Sign Event] QQQ - 1st Mini Album [QtoresQ]",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156856",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/02/04/oOzYd3.jpg",
-    "id": 116
-  },
-  {
-    "artist": "CNBLUE",
-    "type": "签售",
-    "date": "03-10",
-    "dateKey": "2026-03-10",
-    "detail": "[Off-Line Sign Event] [Magazine] [26-03-10] COSMOPOLITAN SHINE : CNBLUE A Type (Cover : CNBLUE : JUNG YONGHWA)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156623",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/01/30/aSzv7C.png",
-    "id": 117
-  },
-  {
-    "artist": "CNBLUE",
-    "type": "签售",
-    "date": "03-10",
-    "dateKey": "2026-03-10",
-    "detail": "[Off-Line Sign Event] [Magazine] [26-03-10] COSMOPOLITAN SHINE : CNBLUE B Type (Cover : CNBLUE : KANG MINHYUK)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156624",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/01/30/9Loi1G.png",
-    "id": 118
-  },
-  {
-    "artist": "CNBLUE",
-    "type": "签售",
-    "date": "03-10",
-    "dateKey": "2026-03-10",
-    "detail": "[Off-Line Sign Event] [Magazine] [26-03-10] COSMOPOLITAN SHINE : CNBLUE C Type (Cover : CNBLUE : LEE JUNGSHIN)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156625",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/01/30/ivPuX6.png",
-    "id": 119
-  },
-  {
-    "artist": "CNBLUE",
-    "type": "签售",
-    "date": "03-10",
-    "dateKey": "2026-03-10",
-    "detail": "[Off-Line Sign Event] [Magazine] [26-03-10] COSMOPOLITAN SHINE : CNBLUE D Type (Cover : CNBLUE)",
-    "detailUrl": "https://cn.ktown4u.com/iteminfo?goods_no=156626",
-    "ticketPlatform": "Ktown4u",
-    "ticketTime": "",
-    "showTime": "",
-    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/01/30/G9waDk.png",
-    "id": 120
+    "coverImage": "https://media.ktown4u.com/products/resize/thumbnail/2026/08/19/68JTPt.jpg",
+    "id": 102
   }
 ]

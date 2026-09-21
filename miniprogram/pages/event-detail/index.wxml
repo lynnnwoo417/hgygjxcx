@@ -20,38 +20,36 @@
       <text class="value type-tag {{type === '回归' ? 'type-regression' : type === '演唱会' ? 'type-concert' : type === '签售' ? 'type-fansign' : 'type-activity'}}">{{type}}</text>
     </view>
     <view class="row">
+      <text class="label">活动名称</text>
+      <text class="value detail-text">{{detail}}</text>
+    </view>
+    <view class="row">
       <text class="label">日期</text>
       <text class="value">{{dateKey || date}}</text>
     </view>
-    <view class="row">
-      <text class="label">详情</text>
-      <text class="value detail-text">{{detail}}</text>
+    <view class="row" wx:if="{{showTime}}">
+      <text class="label">{{type === '回归' ? '发布时间' : '活动时间'}}</text>
+      <text class="value">{{showTime}}</text>
     </view>
-    <block wx:if="{{type === '演唱会' || type === '签售'}}">
-      <view class="row">
-        <text class="label">购票平台</text>
-        <text class="value">{{ticketPlatform || '暂无'}}</text>
-      </view>
-      <view class="row">
-        <text class="label">场馆</text>
-        <text class="value">{{ticketTime || '暂无'}}</text>
-      </view>
-    </block>
-    <block wx:if="{{type === '活动'}}">
-      <view class="row">
-        <text class="label">地点</text>
-        <text class="value">{{locationText || '暂无'}}</text>
-      </view>
-    </block>
-    <block wx:if="{{type === '回归' && showTime}}">
-      <view class="row">
-        <text class="label">发布时间</text>
-        <text class="value">{{showTime}}</text>
-      </view>
-    </block>
+    <view class="row" wx:if="{{venue}}">
+      <text class="label">场馆</text>
+      <text class="value">{{venue}}</text>
+    </view>
+    <view class="row" wx:if="{{locationText && locationText !== venue}}">
+      <text class="label">地点</text>
+      <text class="value">{{locationText}}</text>
+    </view>
+    <view class="row" wx:if="{{ticketPlatform}}">
+      <text class="label">{{type === '签售' ? '报名平台' : '购票平台'}}</text>
+      <text class="value">{{ticketPlatform}}</text>
+    </view>
+    <view class="row" wx:if="{{ticketTime}}">
+      <text class="label">开票时间</text>
+      <text class="value">{{ticketTime}}</text>
+    </view>
   </view>
-  <button class="btn" wx:if="{{detailUrl}}" bindtap="onOpenLink">
-    {{type === '签售' ? '复制购买链接' : (type === '演唱会' || type === '活动' ? '复制购票链接' : '复制详情链接')}}
-  </button>
+  <button class="btn" wx:if="{{officialUrl || detailUrl}}" bindtap="onOpenLink">{{ctaText}}</button>
+  <text class="cta-hint" wx:if="{{officialUrl || detailUrl}}">小程序内无法完成报名或购票，点击后将复制官方链接，请到浏览器或官方 App 打开</text>
+  <button class="btn ghost" bindtap="onToggleTrip">{{isRecorded ? '✓ 已加入行程' : '＋ 加入行程'}}</button>
   <button class="btn ghost" bindtap="onToggleFavorite">{{isFavorite ? '取消收藏' : '加入收藏'}}</button>
 </view>

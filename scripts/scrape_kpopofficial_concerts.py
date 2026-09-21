@@ -136,17 +136,36 @@ def pick_cover_image(block: str) -> str | None:
 
 
 def extract_location_text(block: str) -> str | None:
-    # heuristic: icon-location followed by text node
+    # 列表卡片：icon-location 后紧跟 <span class="gspb_meta_value">Kyocera Dome Osaka, Osaka, Japan</span>
+    m = re.search(
+        r'icon-location[\s\S]{0,500}?class="gspb_meta_value">\s*([^<]{2,160})\s*<',
+        block,
+        re.I,
+    )
+    if m:
+        return _normalize_text(m.group(1)).strip("· ").strip()[:160]
+
     block2 = _normalize_text(block)
     m = re.search(r"icon-location[^>]*>\s*([^<]{2,120}?)\s*(?:Views|View Details|Daily Views|Total Views)", block2, re.I)
     if m:
         return m.group(1).strip("· ").strip()[:120]
-
-    # fallback: pick first comma-separated place-like text near icon-location
     m = re.search(r"icon-location[^>]*>\s*([^<]{2,120})", block2, re.I)
     if m:
         return m.group(1).strip("· ").strip()[:120]
     return None
+
+
+def split_venue_and_city(loc: str) -> tuple[str, str]:
+    """'Kyocera Dome Osaka, Osaka, Japan' -> venue, city/country。不编造，仅按逗号拆。"""
+    loc = _normalize_text(loc)
+    if not loc:
+        return "", ""
+    parts = [p.strip() for p in loc.split(",") if p.strip()]
+    if len(parts) >= 3:
+        return ", ".join(parts[:-2])[:120], ", ".join(parts[-2:])[:120]
+    if len(parts) == 2:
+        return parts[0][:120], parts[1][:120]
+    return loc[:120], ""
 
 
 def extract_title(block: str) -> str | None:
@@ -207,6 +226,7 @@ def extract_events_from_html(html: str) -> list[dict]:
         artist = infer_artist(title, slug)
         cover = pick_cover_image(block)
         loc = extract_location_text(block)
+        venue, city = split_venue_and_city(loc or "")
 
         # detail field: prefer full title; append location if it seems short and location exists
         detail = title
@@ -228,7 +248,8 @@ def extract_events_from_html(html: str) -> list[dict]:
                     "detail": detail,
                     "detailUrl": detail_url,
                     "coverImage": cover or "",
-                    "locationText": loc or "",
+                    "venue": venue,
+                    "locationText": city or loc or "",
                     "dateTextRaw": date_text,
                 }
             )

@@ -1,0 +1,2 @@
+# 回归预告机 API（Serverless）
+# 无第三方依赖，Vercel 可直接部署 Python 文件

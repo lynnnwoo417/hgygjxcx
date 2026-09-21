@@ -1,6 +1,7 @@
 /**
- * 日程 API 地址（后端每 12 小时爬一次站，此处填接口根地址）。
- * 留空则仅使用本地 data/*.js，不请求网络。
- * 部署后端后改为你的域名，例如：'https://your-domain.com'
+ * 日程 API 地址。留空则继续使用本地 miniprogram/data/*.js，页面不会崩。
+ * 本地测试示例：'http://127.0.0.1:5001'
+ * 上线后改成你的 API 域名，例如：'https://xxx.vercel.app'
+ * 不要把 Supabase 密钥写在这个文件里。
  */
-export const SCHEDULE_API_BASE = '';
+export const SCHEDULE_API_BASE = 'http://127.0.0.1:5001';

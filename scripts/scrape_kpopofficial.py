@@ -178,6 +178,17 @@ def extract_comebacks_from_html(html: str):
         # 规范化艺人名
         if " Comeback " in a and " 2026" in a:
             a = a.split(" Comeback ")[0].strip()
+        # 页面标题常把发行说明粘在艺人名后面，例如
+        # “aespa 1st Japan Mini Album” / “RESCENE Special Single”。
+        # 这些词应属于专辑信息，不应污染搜索和展示用的艺人名。
+        a = re.sub(
+            r"\s+(?:\d+(?:st|nd|rd|th)\s+)?(?:Japan(?:ese)?\s+)?(?:Special\s+)?"
+            r"(?:Mini\s+Album|Full\s+Album|Album|Digital\s+Single|Single|EP)(?:\s.*)?$",
+            "",
+            a,
+            flags=re.I,
+        ).strip()
+        a = re.sub(r"\s+(?:Japan|Japanese|Korean)\s*$", "", a, flags=re.I).strip()
         if re.match(r"^(.+?)\s+(?:Pre-release|Digital Single|1st|2nd|3rd|\d+th)\s+(?:Album|Single|EP|Mini)", a, re.I):
             a = re.match(r"^(.+?)\s+(?:Pre-release|Digital Single|1st|2nd|3rd|\d+th)\s+", a, re.I).group(1).strip()
         a = re.sub(r"\s+(?:Single|Digital Single|1st Full Album|2nd Album)\s*$", "", a, flags=re.I)
@@ -238,11 +249,15 @@ def main():
     if args.month is not None:
         month_str = f"-{args.month:02d}-"
         items_month = [c for c in items_all if c.get("dateKey") and month_str in c["dateKey"]]
+        replace_months = {c["dateKey"][:7] for c in items_month if c.get("dateKey")}
 
         existing = _load_existing_items()
         merged_by_key = {}
         extras = []
         for it in existing:
+            # 指定月份采用整月替换，避免艺人名清洗规则变化后留下旧键和重复项。
+            if ((it or {}).get("dateKey") or "")[:7] in replace_months:
+                continue
             k = _item_key(it)
             if k:
                 merged_by_key[k] = it
@@ -263,7 +278,7 @@ def main():
         for i, c in enumerate(items, 1):
             c["id"] = i
 
-        print(f"三月增量更新：本次解析到 {len(items_month)} 条，合并后总计 {len(items)} 条（新增 {max(0, after - before)} 条）")
+        print(f"{args.month}月增量更新：本次解析到 {len(items_month)} 条，合并后总计 {len(items)} 条（新增 {max(0, after - before)} 条）")
     else:
         existing = _load_existing_items()
         # 保护：如果当前 comebacks.json 看起来来自 Reddit（含 showTime 字段），默认不允许被 KPOP OFFICIAL 全量覆盖

@@ -314,7 +314,9 @@ def _rsc_blocks_to_items(raw_blocks: list[dict]) -> list[dict]:
                     "detail": title,
                     "detailUrl": detail_url,
                     "ticketPlatform": "NOL World",
-                    "ticketTime": b.get("placeName") or "",
+                    "ticketTime": "",
+                    "venue": b.get("placeName") or "",
+                    "locationText": "",
                     "showTime": "",
                     "coverImage": b.get("coverImage") or "",
                 }
@@ -472,11 +474,15 @@ def extract_items_yes24(html: str) -> list[dict]:
 
         date_text = ""
         venue = ""
+        show_time = ""
         for k_raw, v_raw in re.findall(r"(?is)<li>\s*<span>([^<]+)</span>\s*:\s*([^<]+)</li>", ul):
             k = normalize(k_raw).lower()
             v = normalize(v_raw)
             if k.startswith("date/time"):
                 date_text = v
+                tm = re.search(r"(\d{1,2}:\d{2}\s*(?:AM|PM)?)", v, re.I)
+                if tm:
+                    show_time = tm.group(1).strip()
             elif k.startswith("venue"):
                 venue = v
 
@@ -507,8 +513,10 @@ def extract_items_yes24(html: str) -> list[dict]:
                     "detail": detail,
                     "detailUrl": detail_url,
                     "ticketPlatform": "YES24",
-                    "ticketTime": venue,  # 场馆
-                    "showTime": "",
+                    "ticketTime": "",
+                    "venue": venue,
+                    "locationText": "",
+                    "showTime": show_time,
                     "coverImage": cover,
                 }
             )
@@ -584,7 +592,9 @@ def extract_items_ticketlink(category2_id: int = 14) -> list[dict]:
                             "detail": detail,
                             "detailUrl": detail_url,
                             "ticketPlatform": "Ticketlink",
-                            "ticketTime": venue,  # 场馆
+                            "ticketTime": "",
+                            "venue": hall,
+                            "locationText": loc if loc != hall else "",
                             "showTime": "",
                             "coverImage": cover,
                         }
@@ -644,10 +654,30 @@ def main() -> None:
     if ticketlink_items:
         items.extend(ticketlink_items)
 
+    # 防误收：部分票务接口会把专辑商品或售卖期误当成演出日期区间。
+    # 同一链接拆出超过 31 天，或标题明显是专辑版本时，不进入正式日历。
+    link_counts = {}
+    for it in items:
+        link = it.get("detailUrl") or ""
+        link_counts[link] = link_counts.get(link, 0) + 1
+
     # merge + re-id
     seen = set()
     merged = []
+    today = datetime.now(KST).date()
+    max_date = today + timedelta(days=550)
     for it in items:
+        title = "%s %s" % (it.get("artist") or "", it.get("detail") or "")
+        try:
+            event_date = date.fromisoformat(it.get("dateKey") or "")
+        except Exception:
+            continue
+        if event_date > max_date:
+            continue
+        if link_counts.get(it.get("detailUrl") or "", 0) > 31:
+            continue
+        if re.search(r"\b(?:mini|full|single)\s+album\b|\b[ABC]\s+Ver\.|fanclub.*(?:recruit|모집)", title, re.I):
+            continue
         key = (it.get("ticketPlatform"), it.get("detailUrl"), it.get("dateKey"))
         if key in seen:
             continue
@@ -674,4 +704,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

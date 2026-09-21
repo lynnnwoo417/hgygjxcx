@@ -1,10 +1,10 @@
 <view class="page">
   <view class="card">
     <view class="title-row">
-      <text class="title">记录</text>
-      <view class="add-btn" bindtap="onOpenCreate">＋ 新增</view>
+      <text class="title">我的行程</text>
+      <view class="add-btn" bindtap="onOpenCreate">＋ 手动添加</view>
     </view>
-    <text class="desc">已记录的卡片会汇总在这里，可写下当时追行程的心情。</text>
+    <text class="desc">计划在韩国参加的活动会汇总在这里。收藏是感兴趣，加入行程是打算去。</text>
   </view>
 
   <view class="list" wx:if="{{items.length > 0}}">
@@ -14,22 +14,22 @@
         <text class="date">{{item.dateKey}}</text>
       </view>
       <text class="sub">{{item.type}} · {{item.detail}}</text>
-      <text class="note" wx:if="{{item.note}}">记录：{{item.note}}</text>
+      <text class="note" wx:if="{{item.note}}">备注：{{item.note}}</text>
       <view class="actions">
-        <text class="action" data-index="{{index}}" bindtap="onEdit">写记录</text>
-        <text class="action danger" data-index="{{index}}" bindtap="onRemove">删除</text>
+        <text class="action" data-index="{{index}}" bindtap="onEdit">写备注</text>
+        <text class="action danger" data-index="{{index}}" bindtap="onRemove">移出行程</text>
       </view>
     </view>
   </view>
 
   <view class="empty" wx:else>
-    <text>暂无记录</text>
+    <text>暂无行程，可从首页把活动加入行程</text>
   </view>
 
   <view class="modal-mask" wx:if="{{showCreate}}" bindtap="onCloseCreate"></view>
   <view class="modal" wx:if="{{showCreate}}">
     <view class="modal-card">
-      <view class="modal-title">新增自定义记录</view>
+      <view class="modal-title">手动添加行程</view>
       <input
         class="input"
         placeholder="标题/团体名"
@@ -54,7 +54,7 @@
       </view>
       <textarea
         class="textarea"
-        placeholder="记录心情（repo）"
+        placeholder="行程备注（可选）"
         value="{{formNote}}"
         data-field="formNote"
         bindinput="onFormInput"
@@ -62,7 +62,7 @@
       />
       <view class="modal-actions">
         <button class="btn ghost" bindtap="onCloseCreate">取消</button>
-        <button class="btn" bindtap="onCreateRecord">添加记录</button>
+        <button class="btn" bindtap="onCreateRecord">加入行程</button>
       </view>
     </view>
   </view>

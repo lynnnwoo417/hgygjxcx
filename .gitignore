@@ -21,6 +21,9 @@ project.private.config.json
 *.swo
 *~
 
-# 临时文件
-*.tmp
-*.temp
+.env
+.venv/
+.vercel
+__pycache__/
+*.pyc
+.python-version

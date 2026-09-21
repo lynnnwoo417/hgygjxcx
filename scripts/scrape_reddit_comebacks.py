@@ -16,6 +16,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 WIKI_ARCHIVE_URL = "https://www.reddit.com/r/kpop/wiki/upcoming-releases/archive/"
+WIKI_ARCHIVE_JSON = "https://www.reddit.com/r/kpop/wiki/upcoming-releases/archive.json"
 WIKI_MONTH_URL = "https://www.reddit.com/r/kpop/wiki/upcoming-releases/{year}/{month}"
 OUTPUT_JS = os.path.join(os.path.dirname(__file__), "..", "miniprogram", "data", "comebacks.js")
 OUTPUT_JSON = os.path.join(os.path.dirname(__file__), "..", "miniprogram", "data", "comebacks.json")
@@ -250,15 +251,36 @@ def parse_table_for_month(md: str, year: int, month: int) -> list[dict]:
 
 def main() -> None:
     print("正在请求 archive 索引:", WIKI_ARCHIVE_URL)
+    month_links: list[tuple[int, str]] = []
+    # 优先 JSON（含 content_md），失败再解析 HTML
     try:
-        archive_html = fetch_html(WIKI_ARCHIVE_URL)
+        archive_data = fetch_json(WIKI_ARCHIVE_JSON)
+        md = (archive_data.get("data") or {}).get("content_md") or ""
+        for m in re.finditer(
+            r"\]\(https://[^)]*wiki/upcoming-releases/(\d{4})/([a-z]+)\)",
+            md,
+            re.I,
+        ):
+            year, month_str = int(m.group(1)), m.group(2).lower()
+            if month_str in MONTH_NAMES:
+                month_links.append((year, month_str))
     except Exception as e:
-        print("Archive 请求失败:", e)
-        return
-    month_links = extract_month_links_from_archive_html(archive_html)
+        print("Archive JSON 失败，尝试 HTML:", e)
+        try:
+            archive_html = fetch_html(WIKI_ARCHIVE_URL)
+            month_links = extract_month_links_from_archive_html(archive_html)
+        except Exception as e2:
+            print("Archive 请求失败:", e2)
+            return
+
+    month_links = list(dict.fromkeys(month_links))
     # 只抓 2024 及以后，减少请求量
     month_links = [(y, m) for y, m in month_links if y >= 2024]
     print("解析到", len(month_links), "个月份页面")
+    if not month_links:
+        print("未解析到任何月份，保留本地已有 comebacks 数据，不覆盖写入。")
+        return
+
     all_rows: list[dict] = []
     seen: set[tuple[str, str, str]] = set()
     for year, month_name in month_links:
@@ -293,6 +315,9 @@ def main() -> None:
             print(" ", year, month_name, "失败:", e)
         time.sleep(0.3)
     all_rows.sort(key=lambda x: (x["dateKey"], x["artist"], x.get("detail") or ""))
+    if not all_rows and os.path.exists(OUTPUT_JSON):
+        print("本次未抓到任何条目，保留本地已有 comebacks 数据，不覆盖写入。")
+        return
     for i, r in enumerate(all_rows, 1):
         r["id"] = i
     os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)

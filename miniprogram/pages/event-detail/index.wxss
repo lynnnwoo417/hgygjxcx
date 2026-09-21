@@ -146,3 +146,12 @@
   background: rgba(139, 122, 168, 0.12);
   color: #6b5b95;
 }
+
+.cta-hint {
+  display: block;
+  margin-top: 12rpx;
+  padding: 0 8rpx;
+  font-size: 22rpx;
+  line-height: 1.45;
+  color: #8b7aa8;
+}

@@ -80,10 +80,14 @@ def extract_div_balanced(html: str, start_idx: int) -> str | None:
 def extract_entry_content(html: str) -> str | None:
     # locate entry-content container
     m = re.search(r'(?is)<div[^>]+class="[^"]*\bentry-content\b[^"]*"[^>]*>', html)
-    if not m:
-        return None
-    frag = extract_div_balanced(html, m.start())
-    return frag
+    if m:
+        frag = extract_div_balanced(html, m.start())
+        if frag:
+            return frag
+    m = re.search(r'(?is)<table\b[^>]*>[\s\S]*?Venue[\s\S]*?</table>', html)
+    if m:
+        return m.group(0)
+    return None
 
 
 def truncate_noise(content_html: str) -> str:
@@ -173,6 +177,8 @@ def extract_extracted_info(html: str) -> dict:
         if not k or len(k) > 60:
             continue
         v_html = cells[1]
+        if k.lower() == "venue":
+            v_html = re.sub(r"(?i)<br\s*/?>", ", ", v_html)
         # preserve first link if exists
         a = re.search(r'(?is)<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>', v_html)
         if a:
@@ -185,10 +191,64 @@ def extract_extracted_info(html: str) -> dict:
         if not v:
             continue
         # Only keep a curated subset to reduce noise
-        if k.lower() in {"event", "date", "venue", "buy ticket", "official source", "ticket price", "tickets", "deal score"}:
+        if k.lower() in {"event", "date", "venue", "buy ticket", "official source", "ticket price", "tickets", "deal score", "artist"}:
             info[k] = v[:500]
 
     return info
+
+
+def parse_show_time(date_text: str) -> str:
+    s = normalize(date_text)
+    m = re.search(r"(\d{1,2}:\d{2}\s*(?:AM|PM)?\s*(?:KST|JST|CST|SGT)?)", s, re.I)
+    if m:
+        return normalize(m.group(1))
+    m = re.search(r"(\d{1,2}\s*(?:AM|PM)\s*(?:KST|JST|CST|SGT)?)", s, re.I)
+    if m:
+        return normalize(m.group(1))
+    return ""
+
+
+def enrich_from_extracted(info: dict) -> dict:
+    """把详情页 Event Info 抽成小程序轻量字段。"""
+    out = {"venue": "", "locationText": "", "showTime": "", "officialUrl": ""}
+    for k, v in (info or {}).items():
+        kl = (k or "").strip().lower()
+        val = normalize(v)
+        if kl == "venue":
+            val = re.sub(r"\s*Google Maps.*$", "", val, flags=re.I)
+            val = re.sub(r"\s*\(https?://[^)]+\)\s*", "", val)
+            val = normalize(val.replace("→", ""))
+            parts = [p.strip() for p in re.split(r"\s*,\s*", val) if p.strip()]
+            if len(parts) >= 3:
+                out["venue"] = ", ".join(parts[:-2])[:120]
+                out["locationText"] = ", ".join(parts[-2:])[:120]
+            elif len(parts) == 2:
+                out["venue"] = parts[0][:120]
+                out["locationText"] = parts[1][:120]
+            else:
+                out["venue"] = val[:120]
+        elif kl == "date":
+            out["showTime"] = parse_show_time(val)
+        elif kl == "buy ticket":
+            m = re.search(r"(https?://[^\s)]+)", val)
+            if m:
+                out["officialUrl"] = m.group(1).rstrip(".,)")
+    return out
+
+
+def merge_into_concerts(items: list, by_url: dict[str, dict]) -> None:
+    for it in items:
+        url = (it or {}).get("detailUrl") or ""
+        extra = by_url.get(url) or {}
+        if extra.get("venue") and not (it.get("venue") or "").strip():
+            it["venue"] = extra["venue"]
+        if extra.get("locationText"):
+            # 详情页城市通常更准
+            it["locationText"] = extra["locationText"]
+        if extra.get("showTime") and not (it.get("showTime") or "").strip():
+            it["showTime"] = extra["showTime"]
+        if extra.get("officialUrl"):
+            it["officialUrl"] = extra["officialUrl"]
 
 
 def fetch(url: str) -> str:
@@ -220,55 +280,73 @@ def main() -> None:
     os.makedirs(os.path.dirname(OUT_INDEX), exist_ok=True)
 
     index: dict[str, str] = {}
+    by_url: dict[str, dict] = {}
     ok = 0
     for i, url in enumerate(unique_urls, start=1):
         h = sha1_hex(url)
         out_path = os.path.join(OUT_DIR, f"{h}.json")
         index[url] = h
+        record = None
 
-        # Skip if already cached and recent enough (optional); for now always refresh if missing
         if os.path.exists(out_path):
-            ok += 1
-            continue
+            try:
+                with open(out_path, "r", encoding="utf-8") as f:
+                    record = json.load(f)
+            except Exception:
+                record = None
 
-        try:
-            html = fetch(url)
-        except Exception as e:
-            print(f"[{i}/{len(unique_urls)}] 抓取失败: {url} -> {e}")
-            continue
+        if record is None:
+            try:
+                html = fetch(url)
+            except Exception as e:
+                print(f"[{i}/{len(unique_urls)}] 抓取失败: {url} -> {e}")
+                continue
 
-        entry = extract_entry_content(html)
-        if not entry:
-            print(f"[{i}/{len(unique_urls)}] 未找到 entry-content: {url}")
-            continue
+            entry = extract_entry_content(html) or html
+            if "<table" not in entry.lower() and "<tr" not in entry.lower():
+                print(f"[{i}/{len(unique_urls)}] 页面无 Event Info 表: {url}")
+            entry = truncate_noise(entry)
+            content_html = sanitize_for_rich_text(entry)
+            extracted_info = extract_extracted_info(html)
 
-        entry = truncate_noise(entry)
-        content_html = sanitize_for_rich_text(entry)
-        extracted_info = extract_extracted_info(html)
+            title = ""
+            tm = re.search(r"(?is)<h1[^>]*class=\"[^\"]*entry-title[^\"]*\"[^>]*>(.*?)</h1>", html)
+            if tm:
+                title = strip_tags(tm.group(1))
 
-        title = ""
-        tm = re.search(r"(?is)<h1[^>]*class=\"[^\"]*entry-title[^\"]*\"[^>]*>(.*?)</h1>", html)
-        if tm:
-            title = strip_tags(tm.group(1))
+            record = {
+                "detailUrl": url,
+                "hash": h,
+                "fetchedAt": now_iso(),
+                "title": title,
+                "contentHtml": content_html,
+                "extractedInfo": extracted_info,
+            }
+            try:
+                with open(out_path, "w", encoding="utf-8") as f:
+                    json.dump(record, f, ensure_ascii=False)
+                print(f"[{i}/{len(unique_urls)}] OK {url}")
+            except Exception as e:
+                print(f"[{i}/{len(unique_urls)}] 写入失败: {out_path} -> {e}")
+            time.sleep(FETCH_DELAY)
+        else:
+            print(f"[{i}/{len(unique_urls)}] cache {url}")
 
-        record = {
-            "detailUrl": url,
-            "hash": h,
-            "fetchedAt": now_iso(),
-            "title": title,
-            "contentHtml": content_html,
-            "extractedInfo": extracted_info,
-        }
+        ok += 1
+        extra = enrich_from_extracted((record or {}).get("extractedInfo") or {})
+        by_url[url] = extra
 
-        try:
-            with open(out_path, "w", encoding="utf-8") as f:
-                json.dump(record, f, ensure_ascii=False)
-            ok += 1
-            print(f"[{i}/{len(unique_urls)}] OK {url}")
-        except Exception as e:
-            print(f"[{i}/{len(unique_urls)}] 写入失败: {out_path} -> {e}")
-
-        time.sleep(FETCH_DELAY)
+    merge_into_concerts(items, by_url)
+    try:
+        with open(CONCERTS_JSON, "w", encoding="utf-8") as f:
+            json.dump(items, f, ensure_ascii=False, indent=2)
+        js_path = os.path.join(ROOT, "miniprogram", "data", "concerts.js")
+        js_content = "// 由 scripts/scrape_kpopofficial_concerts.py 从 kpopofficial.com/kpop-concerts 抓取\nmodule.exports = " + json.dumps(items, ensure_ascii=False) + ";"
+        with open(js_path, "w", encoding="utf-8") as f:
+            f.write(js_content)
+        print("已回写场馆/时间到 concerts.json / concerts.js")
+    except Exception as e:
+        print("回写 concerts.json 失败:", e)
 
     with open(OUT_INDEX, "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=2)

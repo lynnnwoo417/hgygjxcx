@@ -1,5 +1,5 @@
 // pages/index/index.ts
-import { SCHEDULE_API_BASE } from '../../utils/config';
+import { getCalendarEvents, getEvents, hasRemoteApi, searchEvents } from '../../utils/api';
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 const FILTER_TABS = [
@@ -13,6 +13,250 @@ const FILTER_TABS = [
 const FAVORITES_KEY = 'my_favorites';
 const RECORDS_KEY = 'my_records';
 
+function localizeReleaseDetail(detail: string): string {
+  const raw = detail || '回归';
+  return raw
+    .replace(/^pre-release\s+/i, '先行 ')
+    .replace(/^Japanese\s+/i, '日语 ')
+    .replace(/^Korean\s+/i, '韩语 ')
+    .replace(/^full-length album/i, '正规专辑')
+    .replace(/^full album/i, '正规专辑')
+    .replace(/^mini album/i, '迷你专辑')
+    .replace(/^digital single/i, '数字单曲')
+    .replace(/^single album/i, '单曲专辑')
+    .replace(/^special single/i, '特别单曲')
+    .replace(/^single/i, '单曲')
+    .replace(/^EP\b/i, 'EP');
+}
+
+function looksLikeClockOrSaleTime(text: string): boolean {
+  const s = (text || '').trim();
+  if (!s) return false;
+  return (
+    /^\d{1,2}:\d{2}/.test(s) ||
+    /\d{1,2}:\d{2}\s*(kst|jst|cst|sgt)/i.test(s) ||
+    /(开票|预售|onsale|on sale|ticket time)/i.test(s)
+  );
+}
+
+/** 票务爬虫曾把场馆误写入 ticketTime；加载时纠正，不伪造新地点。 */
+function splitTicketAndVenue(item: {
+  ticketTime?: string;
+  venue?: string;
+  locationText?: string;
+}): { ticketTime?: string; venue?: string; locationText?: string } {
+  const locationText = (item.locationText || '').trim();
+  let ticketTime = (item.ticketTime || '').trim();
+  let venue = (item.venue || '').trim();
+  if (ticketTime === '해당 없음' || ticketTime === '-' || ticketTime === 'N/A') {
+    ticketTime = '';
+  }
+  if (!venue && ticketTime && !looksLikeClockOrSaleTime(ticketTime)) {
+    venue = ticketTime;
+    ticketTime = '';
+  }
+  return {
+    ticketTime: ticketTime || undefined,
+    venue: venue || undefined,
+    locationText: locationText || undefined
+  };
+}
+
+/** 国家/地区：点当前国旗下滑展开，再点目标旗帜 */
+const REGION_TABS = [
+  { key: 'KR', flag: '🇰🇷', label: '韩国' },
+  { key: 'JP', flag: '🇯🇵', label: '日本' },
+  { key: 'CN', flag: '🇨🇳', label: '中国大陆' },
+  { key: 'HK', flag: '🇭🇰', label: '中国香港' },
+  { key: 'MO', flag: '🇲🇴', label: '中国澳门' },
+  { key: 'US', flag: '🇺🇸', label: '美国' },
+  { key: 'OTHER', flag: '🌍', label: '其他地区' }
+];
+
+function regionFlagOf(key: string): string {
+  for (let i = 0; i < REGION_TABS.length; i++) {
+    if (REGION_TABS[i].key === key) return REGION_TABS[i].flag;
+  }
+  return '🇰🇷';
+}
+
+function regionLabelOf(key: string): string {
+  for (let i = 0; i < REGION_TABS.length; i++) {
+    if (REGION_TABS[i].key === key) return REGION_TABS[i].label;
+  }
+  return '韩国';
+}
+
+function chinaAreaLabel(region: string): string {
+  if (region === 'HK') return '中国香港';
+  if (region === 'MO') return '中国澳门';
+  if (region === 'TW') return '中国台湾';
+  return '';
+}
+
+/**
+ * 地区识别词表。顺序即优先级：
+ * 港澳台要排在「中国大陆」前面（'Hong Kong, China' 不能被 'china' 抢先命中）。
+ */
+const REGION_RULES: Array<{ region: string; hints: string[] }> = [
+  {
+    region: 'HK',
+    hints: ['hong kong', 'hongkong', '香港', 'kai tak', 'asiaworld', 'asia world-expo']
+  },
+  {
+    region: 'MO',
+    hints: ['macau', 'macao', '澳门', '澳門']
+  },
+  {
+    region: 'TW',
+    hints: ['taiwan', 'taipei', 'kaohsiung', 'taichung', 'tainan', '台湾', '台灣', '台北', '高雄', '台中']
+  },
+  {
+    region: 'KR',
+    hints: [
+      'korea', '한국', '서울', 'seoul', '首尔',
+      // 韩国其他市道（韩文 / 罗马字 / 中文）
+      '경기', '인천', '부산', '대구', '대전', '광주', '울산', '제주', '전북', '전남', '강원', '충북', '충남', '경북', '경남', '세종',
+      'goyang', 'incheon', 'busan', 'daegu', 'daejeon', 'gwangju', 'ulsan', 'jeju', 'suwon', 'yongin',
+      'cheongju', 'gapyeong', 'paju', 'ansan', 'anyang', 'bucheon', 'seongnam', 'gyeonggi', 'jeonju',
+      'changwon', 'gimhae', 'wonju', 'gangneung', 'pyeongtaek', 'sasang-gu',
+      // 韩国常见场馆
+      'kspo', 'gocheok', 'kintex', 'inspire arena', 'bexco', 'exco', 'yes24', 'jangchung',
+      'blue square', 'bluesquare', 'sangsangmadang', 'jarasum', 'paradise city', 'olympic hall',
+      'olympic park', 'olympicpark', 'sejong center', 'kbs arena', 'kbs부산홀',
+      // festas 的中文区域名
+      '光化门', '弘大', '圣水', '江南', '东大门', '梨泰院', '汝矣岛', '蚕室', '龙山', '明洞', '钟路', '合井', '建大', '新村',
+      '水原', '仁川', '釜山', '大邱', '济州', '高阳'
+    ]
+  },
+  {
+    region: 'JP',
+    hints: [
+      'japan', 'tokyo', 'osaka', 'saitama', 'chiba', 'nagoya', 'fukuoka', 'kobe', 'kyoto',
+      'yokohama', 'sapporo', 'hiroshima', 'makuhari', 'okinawa', 'nagasaki', 'kanagawa',
+      '日本', '东京', '大阪', '名古屋', '福冈'
+    ]
+  },
+  {
+    region: 'CN',
+    hints: [
+      'china', '中国', 'shanghai', 'beijing', 'guangzhou', 'shenzhen', 'chengdu', 'chongqing',
+      'hangzhou', 'nanjing', 'wuhan', 'xi\'an', 'qingdao', 'shenyang',
+      '上海', '北京', '广州', '深圳', '成都', '重庆', '杭州', '南京', '武汉'
+    ]
+  },
+  {
+    region: 'US',
+    hints: [
+      'united states', ', us', 'nevada', 'new york', 'los angeles', 'california',
+      'texas', 'chicago', 'washington', 'las vegas', 'brooklyn', 'america'
+    ]
+  },
+  {
+    region: 'OTHER',
+    hints: [
+      'canada', 'mexico', 'colombia', 'bogota', 'argentina', 'buenos aires',
+      'brazil', 'sao paulo', 'chile', 'santiago', 'peru', 'lima',
+      'ontario', 'vancouver', 'toronto',
+      // 亚太（韩日中以外）
+      'singapore', 'thailand', 'bangkok', 'malaysia', 'kuala lumpur', 'indonesia', 'jakarta',
+      'philippines', 'manila', 'bulacan', 'cebu', 'vietnam', 'hanoi', 'ho chi minh', 'cambodia',
+      'australia', 'sydney', 'melbourne', 'brisbane', 'new zealand', 'auckland', 'india', 'mumbai',
+      // 欧洲 / 中东
+      'united kingdom', 'london', 'manchester', 'ireland', 'dublin', 'france', 'paris', 'germany',
+      'berlin', 'hamburg', 'netherlands', 'amsterdam', 'belgium', 'brussels', 'spain', 'madrid',
+      'barcelona', 'italy', 'milan', 'rome', 'poland', 'warsaw', 'sweden', 'stockholm', 'denmark',
+      'copenhagen', 'switzerland', 'zurich', 'austria', 'vienna', 'portugal', 'lisbon', 'czech',
+      'prague', 'hungary', 'budapest', 'turkey', 'istanbul', 'dubai', 'abu dhabi', 'saudi', 'qatar'
+    ]
+  }
+];
+
+function hasHint(text: string, hints: string[]): boolean {
+  return hints.some(hint => text.indexOf(hint) >= 0);
+}
+
+function matchRegion(text: string): string {
+  const t = (text || '').toLowerCase();
+  if (!t.trim()) return '';
+  for (let i = 0; i < REGION_RULES.length; i++) {
+    if (hasHint(t, REGION_RULES[i].hints)) return REGION_RULES[i].region;
+  }
+  return '';
+}
+
+/**
+ * 推断一条日程属于哪个国家/地区：地点字段 > 场馆 > 标题详情。
+ * 回归没有地点（且标题里常出现「日语专辑」这类词），统一归到韩国，避免被误判。
+ * 完全认不出来的按韩国算——数据源本身以韩国为主，不凭空丢掉真实数据。
+ */
+function detectRegion(item: { type?: string; venue?: string; locationText?: string; detail?: string }): string {
+  if ((item.type || '') === '回归') return 'KR';
+  const loc = (item.locationText || '').trim();
+  if (loc) {
+    const byLoc = matchRegion(loc);
+    if (byLoc) return byLoc;
+    // 「城市, 国家」这类英文地点，没提到韩国就按海外算
+    if (/[a-z]/i.test(loc)) return 'OTHER';
+  }
+  const byVenue = matchRegion(item.venue || '');
+  if (byVenue) return byVenue;
+  const byDetail = matchRegion(item.detail || '');
+  if (byDetail) return byDetail;
+  return 'KR';
+}
+
+function decoratePlace(item: {
+  type?: string;
+  ticketTime?: string;
+  venue?: string;
+  locationText?: string;
+  detail?: string;
+}): { ticketTime?: string; venue?: string; locationText?: string; displayLocation?: string; region: string } {
+  const split = splitTicketAndVenue(item);
+  const region = detectRegion({
+    type: item.type,
+    venue: split.venue,
+    locationText: split.locationText,
+    detail: item.detail
+  });
+  const area = chinaAreaLabel(region);
+  return {
+    ...split,
+    displayLocation: area || undefined,
+    region
+  };
+}
+
+function hydrateSchedule(item: any, index: number): ScheduleItem {
+  const place = decoratePlace(item);
+  return {
+    id: typeof item.id === 'number' ? item.id : index + 1,
+    artist: item.artist || '未知',
+    type: item.type || '回归',
+    date: item.date || (item.dateKey ? String(item.dateKey).slice(5) : '') || '',
+    dateKey: item.dateKey || '',
+    detail: localizeReleaseDetail(item.detail || '回归'),
+    ticketPlatform: item.ticketPlatform,
+    ticketTime: place.ticketTime,
+    venue: place.venue,
+    locationText: place.locationText,
+    displayLocation: place.displayLocation,
+    showTime: item.showTime,
+    detailUrl: item.detailUrl,
+    officialUrl: item.officialUrl,
+    coverImage: item.coverImage,
+    region: place.region || item.region
+  };
+}
+
+function toDateLabel(now: Date): string {
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 interface ScheduleItem {
   id: number;
   artist: string;
@@ -20,14 +264,18 @@ interface ScheduleItem {
   date: string;
   dateKey: string;
   detail: string;
-  ticketPlatform?: string;  // 购票平台：NOL / Melon / YES24 等
-  ticketTime?: string;      // 场馆
-  showTime?: string;        // 开场时间
+  ticketPlatform?: string;  // 购票/报名平台
+  ticketTime?: string;      // 开票时间（若有）
+  venue?: string;           // 场馆
+  showTime?: string;        // 活动/发布时间
   detailUrl?: string;       // 详情/购票链接
-  locationText?: string;    // 活动地点/区域（活动 tab 用）
+  officialUrl?: string;     // 官方购票/报名链接（若有）
+  locationText?: string;    // 地点/区域
+  displayLocation?: string; // 展示用：中国香港 / 中国澳门 / 中国台湾
   coverImage?: string;      // 活动/票务封面（可选）
+  region?: string;          // 加载时推断：KR|JP|CN|US|HK|MO|TW|OTHER
   _isFavorite?: boolean;    // 本地收藏标记（仅前端）
-  _isRecorded?: boolean;    // 本地记录标记（仅前端）
+  _isRecorded?: boolean;    // 本地行程标记（仅前端）
 }
 
 Page({
@@ -40,12 +288,21 @@ Page({
       searchResults: [] as ScheduleItem[],
       filterTabs: FILTER_TABS,
       filterType: '全部' as string,
+      regionTabs: REGION_TABS,
+      regionKey: 'KR' as string,
+      regionFlag: '🇰🇷' as string,
+      regionOpen: false as boolean,
       year: now.getFullYear(),
       month: now.getMonth() + 1,
       monthLabel: '',
+      calendarHint: '看看你在韩国的这几天，有哪些活动可以参加',
       calendarDays: [] as { day: number; dateKey: string; isCurrentMonth: boolean; isToday: boolean; hasEvent: boolean }[],
       selectedDateKey: '',
       selectedDaySchedules: [] as ScheduleItem[],
+      upcomingCount: 0,
+      upcomingCountText: '接下来有 0 场活动',
+      dayPanelOpen: false,
+      dataUpdatedAt: toDateLabel(now),
       weekdays: WEEKDAYS
     };
   })(),
@@ -56,8 +313,71 @@ Page({
   },
 
   onShow() {
-    // 从记录页返回时，刷新卡片上的记录/收藏状态
+    // 从行程页返回时，刷新卡片上的行程/收藏状态
     this.updateSelectedDaySchedules();
+    this.buildUpcomingOverview();
+  },
+
+  /** 概览文案里用的地区名，「其他地区」口语化成「海外」 */
+  currentRegionLabel(): string {
+    return regionLabelOf(this.data.regionKey);
+  },
+
+  currentCalendarHint(): string {
+    const label = this.currentRegionLabel() || '韩国';
+    return `看看你在${label}的这几天，有哪些活动可以参加`;
+  },
+
+  inSelectedRegion(item: ScheduleItem): boolean {
+    const region = item.region || 'KR';
+    if (this.data.regionKey === 'OTHER') return region === 'OTHER' || region === 'TW';
+    return region === this.data.regionKey;
+  },
+
+  onFlagPanelToggle() {
+    this.setData({ regionOpen: !this.data.regionOpen });
+  },
+
+  onRegionTap(e: WechatMiniprogram.TouchEvent) {
+    const regionKey = e.currentTarget.dataset.region as string;
+    if (!regionKey) return;
+    this.setData({
+      regionKey,
+      regionFlag: regionFlagOf(regionKey),
+      regionOpen: false
+    });
+    this.refreshByFilters();
+  },
+
+  /** 筛选条件变化后刷新日历圆点、当日日程、计数与搜索结果 */
+  refreshByFilters() {
+    this.buildCalendar();
+    this.buildUpcomingOverview();
+    const q = (this.data.searchText || '').trim();
+    if (q && this.data.searchOpen) this.applySearch(q);
+  },
+
+  buildUpcomingOverview() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const filterType = this.data.filterType;
+    let source = (this.data.schedules as ScheduleItem[]).filter(
+      item => item.dateKey >= todayKey && this.inSelectedRegion(item)
+    );
+    if (filterType === '全部') {
+      source = source.filter(s => s.type !== '活动');
+    } else if (filterType === '签售') {
+      source = source.filter(s => s.type === '签售' && s.ticketPlatform === 'Ktown4u');
+    } else {
+      source = source.filter(s => s.type === filterType);
+    }
+    const noun = filterType === '全部' ? '活动' : filterType;
+    this.setData({
+      upcomingCount: source.length,
+      upcomingCountText: `接下来有 ${source.length} 场${this.currentRegionLabel()}${noun}`,
+      calendarHint: this.currentCalendarHint()
+    });
   },
 
   onSearchFocus() {
@@ -100,12 +420,36 @@ Page({
       this.setData({ searchOpen: false, searchResults: [] });
       return;
     }
+    if (hasRemoteApi()) {
+      searchEvents(q)
+        .then((rows) => {
+          const mapped = (rows || []).map((item, i) => hydrateSchedule(item, i));
+          const filtered = mapped.filter((s) => this.inSelectedRegion(s));
+          this.setData({
+            searchOpen: true,
+            searchResults: filtered.slice(0, 80)
+          });
+        })
+        .catch(() => {
+          this.applySearchLocal(q);
+        });
+      return;
+    }
+    this.applySearchLocal(q);
+  },
+
+  applySearchLocal(query: string) {
+    const q = (query || '').trim();
+    if (!q) {
+      this.setData({ searchOpen: false, searchResults: [] });
+      return;
+    }
 
     const qn = q.toLowerCase();
     const schedules = this.data.schedules as ScheduleItem[];
     const results: Array<
       ScheduleItem & {
-        _matchField?: 'artist' | 'detail';
+        _matchField?: string;
         _matchIndex?: number;
         _displayDetail?: string;
         _score?: string;
@@ -118,12 +462,10 @@ Page({
     const normalizeAscii = (s: string) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
     const wordBoundaryIndex = (textLower: string, needleLower: string) => {
       if (!needleLower) return -1;
-      // 仅对 ASCII 的“整词”做边界匹配；中文/韩文等用 substring 即可
       if (!isAsciiQuery) return textLower.indexOf(needleLower);
       const re = new RegExp(`(^|[^a-z0-9])(${escapeRegExp(needleLower)})([^a-z0-9]|$)`, 'i');
       const m = re.exec(textLower);
       if (!m) return -1;
-      // m.index 指向整段匹配的开头（可能包含前置边界字符），把它修正到关键词本身的起始位置
       const lead = m[1] ? m[1].length : 0;
       return m.index + lead;
     };
@@ -137,26 +479,40 @@ Page({
       return slice ? (slice + (end < raw.length ? '…' : '')) : raw;
     };
 
+    const fieldPriOf = (field: string) => {
+      if (field === 'artist') return 0;
+      if (field === 'detail') return 1;
+      return 2;
+    };
+
     for (let i = 0; i < schedules.length; i++) {
       const s = schedules[i];
-      // 需求：搜索引擎不包含「活动」
-      if (s && s.type === '活动') continue;
-      const artistRaw = s.artist || '';
-      const detailRaw = s.detail || '';
-      const artist = artistRaw.toLowerCase();
-      const detail = detailRaw.toLowerCase();
-      const artistIdx = wordBoundaryIndex(artist, qn);
-      const detailIdx = wordBoundaryIndex(detail, qn);
-
-      // “整体关键词”策略：优先 artist 命中；其次 detail 命中
-      let field: 'artist' | 'detail' | '' = '';
+      if (!this.inSelectedRegion(s)) continue;
+      const candidates: Array<{ field: string; raw: string }> = [
+        { field: 'artist', raw: s.artist || '' },
+        { field: 'detail', raw: s.detail || '' },
+        { field: 'type', raw: s.type || '' },
+        { field: 'locationText', raw: s.locationText || '' },
+        { field: 'locationText', raw: s.displayLocation || '' },
+        { field: 'venue', raw: s.venue || '' },
+        { field: 'ticketPlatform', raw: s.ticketPlatform || '' }
+      ];
+      let field = '';
       let idx = -1;
-      if (artistIdx >= 0) {
-        field = 'artist';
-        idx = artistIdx;
-      } else if (detailIdx >= 0) {
-        field = 'detail';
-        idx = detailIdx;
+      let fieldRaw = '';
+      let bestPri = 99;
+      for (let c = 0; c < candidates.length; c++) {
+        const raw = candidates[c].raw;
+        if (!raw) continue;
+        const hit = wordBoundaryIndex(raw.toLowerCase(), qn);
+        if (hit < 0) continue;
+        const pri = fieldPriOf(candidates[c].field);
+        if (pri < bestPri || (pri === bestPri && (idx < 0 || hit < idx))) {
+          bestPri = pri;
+          field = candidates[c].field;
+          idx = hit;
+          fieldRaw = raw;
+        }
       }
       if (!field) continue;
 
@@ -164,22 +520,17 @@ Page({
       if (seen.has(key)) continue;
       seen.add(key);
 
-      const fieldTextRaw = field === 'artist' ? artistRaw : detailRaw;
-      const fieldTextLower = field === 'artist' ? artist : detail;
+      const fieldTextLower = fieldRaw.toLowerCase();
       const exactHit =
         (fieldTextLower.trim() === qn) ||
-        (isAsciiQuery && normalizeAscii(fieldTextRaw) === normalizeAscii(q));
+        (isAsciiQuery && normalizeAscii(fieldRaw) === normalizeAscii(q));
       const prefixHit = fieldTextLower.trim().indexOf(qn) === 0;
-      const fieldPri = field === 'artist' ? 0 : 1;
       const idxNorm = idx < 0 ? 9999 : idx;
-      // 排序优先级（越靠前越优先）：
-      // 1) 完全相等（IVE） 2) 整词匹配（" IVE "） 3) 开头匹配（IVE...） 4) 字段优先（artist > detail） 5) 越靠前越优先
       const exactPri = exactHit ? 0 : 1;
       const wordPri = idx >= 0 ? 0 : 1;
       const prefixPri = prefixHit ? 0 : 1;
-      const score = `${exactPri}|${wordPri}|${prefixPri}|${String(fieldPri)}|${String(idxNorm).padStart(4, '0')}`;
+      const score = `${exactPri}|${wordPri}|${prefixPri}|${String(bestPri)}|${String(idxNorm).padStart(4, '0')}`;
 
-      // 注意：不要使用对象展开（...），否则会引入 @babel/runtime 的 objectSpread2 依赖
       results.push({
         id: (s as any).id,
         artist: s.artist,
@@ -189,13 +540,16 @@ Page({
         detail: s.detail,
         ticketPlatform: s.ticketPlatform,
         ticketTime: s.ticketTime,
+        venue: s.venue,
         showTime: s.showTime,
         detailUrl: s.detailUrl,
-        locationText: (s as any).locationText,
-        coverImage: (s as any).coverImage,
+        officialUrl: (s as any).officialUrl,
+        locationText: s.locationText,
+        displayLocation: s.displayLocation,
+        coverImage: s.coverImage,
         _matchField: field,
         _matchIndex: idx,
-        _displayDetail: field === 'detail' ? makeSnippet(detailRaw, idx) : detailRaw,
+        _displayDetail: field === 'detail' ? makeSnippet(s.detail || '', idx) : (s.detail || ''),
         _score: score
       } as any);
     }
@@ -245,9 +599,11 @@ Page({
       detail: item.detail,
       ticketPlatform: item.ticketPlatform,
       ticketTime: item.ticketTime,
+      venue: item.venue,
       showTime: item.showTime,
       detailUrl: item.detailUrl,
-      locationText: item.locationText,
+      officialUrl: (item as any).officialUrl,
+      locationText: item.displayLocation || item.locationText,
       coverImage: item.coverImage
     };
     wx.navigateTo({ url: '/pages/event-detail/index' });
@@ -259,6 +615,26 @@ Page({
       monthLabel: `${year}年${month}月`
     });
     this.buildCalendar();
+    if (hasRemoteApi()) {
+      getCalendarEvents(year, month)
+        .then((res) => {
+          const incoming = (res.schedules || []).map((item, i) => hydrateSchedule(item, i));
+          if (!incoming.length) return;
+          const byId: Record<string, ScheduleItem> = {};
+          const cur = this.data.schedules as ScheduleItem[];
+          for (let i = 0; i < cur.length; i++) byId[String(cur[i].id)] = cur[i];
+          for (let i = 0; i < incoming.length; i++) byId[String(incoming[i].id)] = incoming[i];
+          const merged: ScheduleItem[] = [];
+          Object.keys(byId).forEach((k) => merged.push(byId[k]));
+          this.setData({ schedules: merged }, () => {
+            this.buildCalendar();
+            this.buildUpcomingOverview();
+          });
+        })
+        .catch(() => {
+          /* 保留已有本地/已拉取数据 */
+        });
+    }
   },
 
   // 构建日历网格：上月尾、本月、下月头。按当前筛选类型决定哪些日期显示圆点
@@ -272,10 +648,11 @@ Page({
     const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     const list = (() => {
+      const base = (schedules as ScheduleItem[]).filter(s => this.inSelectedRegion(s));
       // 需求：全部 tab 不展示「活动」卡片（活动只在「活动」tab 里看）
-      if (filterType === '全部') return (schedules as ScheduleItem[]).filter(s => s.type !== '活动');
-      if (filterType === '签售') return (schedules as ScheduleItem[]).filter(s => s.type === '签售' && s.ticketPlatform === 'Ktown4u');
-      return (schedules as ScheduleItem[]).filter(s => s.type === filterType);
+      if (filterType === '全部') return base.filter(s => s.type !== '活动');
+      if (filterType === '签售') return base.filter(s => s.type === '签售' && s.ticketPlatform === 'Ktown4u');
+      return base.filter(s => s.type === filterType);
     })();
     const eventKeys = new Set(list.map((s: ScheduleItem) => s.dateKey));
 
@@ -335,7 +712,9 @@ Page({
 
   updateSelectedDaySchedules() {
     const { schedules, selectedDateKey, filterType } = this.data;
-    let list = (schedules as ScheduleItem[]).filter(s => s.dateKey === selectedDateKey);
+    let list = (schedules as ScheduleItem[]).filter(
+      s => s.dateKey === selectedDateKey && this.inSelectedRegion(s)
+    );
     if (filterType === '全部') {
       // 需求：全部 tab 不展示「活动」卡片
       list = list.filter(s => s.type !== '活动');
@@ -359,9 +738,12 @@ Page({
         detail: s.detail,
         ticketPlatform: s.ticketPlatform,
         ticketTime: s.ticketTime,
+        venue: s.venue,
         showTime: s.showTime,
         detailUrl: s.detailUrl,
+        officialUrl: (s as any).officialUrl,
         locationText: s.locationText,
+        displayLocation: s.displayLocation,
         coverImage: s.coverImage,
         _isFavorite: favSet.has(key),
         _isRecorded: recSet.has(key)
@@ -374,6 +756,7 @@ Page({
     const filterType = e.currentTarget.dataset.filter as string;
     this.setData({ filterType });
     this.buildCalendar();
+    this.buildUpcomingOverview();
   },
 
   prevMonth() {
@@ -402,8 +785,13 @@ Page({
 
   onDayTap(e: WechatMiniprogram.TouchEvent) {
     const dateKey = e.currentTarget.dataset.dateKey as string;
-    this.setData({ selectedDateKey: dateKey });
+    // 点日期即在下方展开当日日程
+    this.setData({ selectedDateKey: dateKey, dayPanelOpen: true });
     this.updateSelectedDaySchedules();
+  },
+
+  onDayPanelToggle() {
+    this.setData({ dayPanelOpen: !this.data.dayPanelOpen });
   },
 
   onScheduleItemTap(e: WechatMiniprogram.TouchEvent) {
@@ -421,9 +809,11 @@ Page({
       detail: item.detail,
       ticketPlatform: item.ticketPlatform,
       ticketTime: item.ticketTime,
+      venue: item.venue,
       showTime: item.showTime,
       detailUrl: item.detailUrl,
-      locationText: item.locationText,
+      officialUrl: (item as any).officialUrl,
+      locationText: item.displayLocation || item.locationText,
       coverImage: item.coverImage
     };
     wx.navigateTo({ url: '/pages/event-detail/index' });
@@ -504,65 +894,46 @@ Page({
       records = Array.isArray(v) ? v : [];
     } catch (_) {}
 
-    let currentNote = '';
-    for (let i = 0; i < records.length; i++) {
-      const it = records[i];
-      if (this.makeKey(it) === key) {
-        currentNote = it.note || '';
-        break;
-      }
+    const exists = records.some((it) => this.makeKey(it) === key);
+    if (exists) {
+      const next = records.filter((it) => this.makeKey(it) !== key);
+      try {
+        wx.setStorageSync(RECORDS_KEY, next);
+      } catch (_) {}
+      wx.showToast({ title: '已移出行程', icon: 'none' });
+      this.updateSelectedDaySchedules();
+      return;
     }
 
-    wx.showModal({
-      title: '记录当时心情',
-      editable: true,
-      placeholderText: '写下追回归的repo…',
-      content: currentNote,
-      success: (res) => {
-        if (!res.confirm) return;
-        const note = (res.content || '').trim();
-        const now = new Date();
-        const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
-          now.getDate()
-        ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-        const record = {
-          id: item.id,
-          artist: item.artist,
-          type: item.type,
-          date: item.date,
-          dateKey: item.dateKey,
-          detail: item.detail,
-          ticketPlatform: item.ticketPlatform,
-          ticketTime: item.ticketTime,
-          showTime: item.showTime,
-          detailUrl: item.detailUrl,
-          locationText: item.locationText,
-          coverImage: item.coverImage,
-          note,
-          recordedAt: time
-        };
-
-        let next: any[] = [];
-        let updated = false;
-        for (let i = 0; i < records.length; i++) {
-          const it = records[i];
-          if (this.makeKey(it) === key) {
-            next.push(record);
-            updated = true;
-          } else {
-            next.push(it);
-          }
-        }
-        if (!updated) next.unshift(record);
-        if (next.length > 300) next = next.slice(0, 300);
-        try {
-          wx.setStorageSync(RECORDS_KEY, next);
-        } catch (_) {}
-        wx.showToast({ title: '已记录', icon: 'none' });
-        this.updateSelectedDaySchedules();
-      }
-    });
+    const now = new Date();
+    const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
+      now.getDate()
+    ).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const record = {
+      id: item.id,
+      artist: item.artist,
+      type: item.type,
+      date: item.date,
+      dateKey: item.dateKey,
+      detail: item.detail,
+      ticketPlatform: item.ticketPlatform,
+      ticketTime: item.ticketTime,
+      venue: item.venue,
+      showTime: item.showTime,
+      detailUrl: item.detailUrl,
+      officialUrl: (item as any).officialUrl,
+      locationText: item.displayLocation || item.locationText,
+      coverImage: item.coverImage,
+      note: '',
+      recordedAt: time
+    };
+    let next = [record].concat(records);
+    if (next.length > 300) next = next.slice(0, 300);
+    try {
+      wx.setStorageSync(RECORDS_KEY, next);
+    } catch (_) {}
+    wx.showToast({ title: '已加入行程', icon: 'none' });
+    this.updateSelectedDaySchedules();
   },
 
 
@@ -574,43 +945,27 @@ Page({
     return '';
   },
 
-  /** 优先从后端 API 拉取（每 12 小时爬一次），失败则用本地 data/*.js */
+  /** 优先从 API 拉取；失败或未配置时用本地 data/*.js，保证页面能开 */
   loadLocalData() {
-    if (SCHEDULE_API_BASE) {
-      wx.request({
-        url: SCHEDULE_API_BASE.replace(/\/$/, '') + '/api/schedules',
-        method: 'GET',
-        success: (res: WechatMiniprogram.RequestSuccessCallbackResult) => {
-          const data = res.data as { schedules?: ScheduleItem[] };
-          const schedules = data && Array.isArray((data as any).schedules) ? (data as any).schedules as ScheduleItem[] : [];
-          if (res.statusCode === 200 && schedules.length > 0) {
-            const list = schedules.map((item, i) => ({
-              id: typeof (item as any).id === 'number' ? (item as any).id : i + 1,
-              artist: item.artist || '未知',
-              type: item.type || '回归',
-              date: item.date || (item.dateKey ? item.dateKey.slice(5) : '') || '',
-              dateKey: item.dateKey || '',
-              detail: item.detail || '回归',
-              ticketPlatform: item.ticketPlatform,
-              ticketTime: item.ticketTime,
-              showTime: item.showTime,
-              detailUrl: item.detailUrl,
-              locationText: (item as any).locationText,
-              coverImage: (item as any).coverImage
-            }));
-            this.setData({ schedules: list });
-            this.buildCalendar();
+    if (hasRemoteApi()) {
+      getEvents()
+        .then((rows) => {
+          if (!rows || rows.length === 0) {
+            this.loadLocalDataFallback();
             return;
           }
+          const list = rows.map((item, i) => hydrateSchedule(item, i));
+          this.setData({ schedules: list }, () => {
+            this.buildCalendar();
+            this.buildUpcomingOverview();
+          });
+        })
+        .catch(() => {
           this.loadLocalDataFallback();
-        },
-        fail: () => {
-          this.loadLocalDataFallback();
-        }
-      });
-    } else {
-      this.loadLocalDataFallback();
+        });
+      return;
     }
+    this.loadLocalDataFallback();
   },
 
   loadLocalDataFallback() {
@@ -620,8 +975,10 @@ Page({
       item: ScheduleItem & {
         ticketPlatform?: string;
         ticketTime?: string;
+        venue?: string;
         showTime?: string;
         detailUrl?: string;
+        officialUrl?: string;
         locationText?: string;
         coverImage?: string;
       }
@@ -633,25 +990,19 @@ Page({
         type: item.type || '回归',
         date: item.date || (item.dateKey ? item.dateKey.slice(5) : '') || '',
         dateKey: item.dateKey || '',
-        detail: item.detail || '回归',
+        detail: localizeReleaseDetail(item.detail || '回归'),
         ticketPlatform: item.ticketPlatform,
-        ticketTime: item.ticketTime,
+        ...decoratePlace(item),
         showTime: item.showTime,
         detailUrl: item.detailUrl,
-        locationText: item.locationText,
+        officialUrl: (item as any).officialUrl,
         coverImage: item.coverImage
       });
     };
     try {
       const comebacks = require('../../data/comebacks.js') as ScheduleItem[];
-      console.log('[加载回归数据] 成功加载，条数:', Array.isArray(comebacks) ? comebacks.length : 0);
-      if (Array.isArray(comebacks) && comebacks.length > 0) {
-        comebacks.forEach(item => push(item));
-        console.log('[加载回归数据] 已添加', comebacks.length, '条回归数据');
-      }
-    } catch (e) {
-      console.error('[加载回归数据] 失败:', e);
-    }
+      if (Array.isArray(comebacks) && comebacks.length > 0) comebacks.forEach(item => push(item));
+    } catch (_) {}
     try {
       const concerts = require('../../data/concerts.js') as ScheduleItem[];
       if (Array.isArray(concerts) && concerts.length > 0) concerts.forEach(item => push(item));
@@ -680,10 +1031,9 @@ Page({
       push({ artist: 'BTS THE COMEBACK LIVE 购票指南', type: '活动', date: '02-09', dateKey: `${y}-02-09`, detail: '娱乐 · 光化门', locationText: '娱乐 · 光化门', detailUrl: 'https://world.nol.com/zh-CN/regions/b263b346-9a60-49d5-949a-dc88dfbea53e/festas' });
     }
     list.sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.type.localeCompare(b.type));
-    console.log('[数据加载完成] 总条数:', list.length);
-    console.log('[数据加载完成] 回归条数:', list.filter(s => s.type === '回归').length);
-    console.log('[数据加载完成] 日期范围:', list.length > 0 ? `${list[0].dateKey} 到 ${list[list.length - 1].dateKey}` : '无数据');
-    this.setData({ schedules: list });
-    this.buildCalendar();
+    this.setData({ schedules: list }, () => {
+      this.buildCalendar();
+      this.buildUpcomingOverview();
+    });
   }
 });

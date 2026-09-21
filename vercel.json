@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/events.py", "use": "@vercel/python" },
+    { "src": "api/events/search.py", "use": "@vercel/python" },
+    { "src": "api/events/calendar.py", "use": "@vercel/python" },
+    { "src": "api/events/[id].py", "use": "@vercel/python" }
+  ],
+  "rewrites": [
+    { "source": "/api/events", "destination": "/api/events" },
+    { "source": "/api/events/search", "destination": "/api/events/search" },
+    { "source": "/api/events/calendar", "destination": "/api/events/calendar" },
+    { "source": "/api/events/:id", "destination": "/api/events/[id]" }
+  ]
+}
